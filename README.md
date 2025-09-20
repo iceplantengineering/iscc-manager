@@ -24,6 +24,7 @@ A comprehensive production management system for sustainable materials with ISCC
 - **Certificate Generation**: Automated ISCC+ certificate creation with digital signatures
 - **Compliance Management**: Audit trail tracking and compliance monitoring
 - **Multi-language Ready**: Japanese communication support with English interface
+- **Responsive Navigation**: Three-tier responsive design with grouped dropdown menus for optimal UX across all devices
 
 ## 🛠 Tech Stack
 
@@ -88,7 +89,7 @@ src/
 │   ├── CostAnalysis.tsx        # Cost tracking & optimization
 │   ├── PredictiveAnalytics.tsx # AI-powered predictions
 │   ├── AdvancedReporting.tsx   # Report generation & exports
-│   └── Navigation.tsx   # Main navigation component
+│   └── Navigation.tsx   # Main navigation component with responsive dropdown menus
 ├── pages/               # Page Components
 │   ├── Index.tsx             # Dashboard overview
 │   ├── OrderStock.tsx         # Order & stock management

@@ -24,14 +24,18 @@ import {
   Shield,
   DollarSign,
   Brain,
-  Download
+  Download,
+  ChevronDown,
+  MoreHorizontal
 } from "lucide-react";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const location = useLocation();
 
-  const navigationItems = [
+  // Core navigation items (always visible)
+  const coreNavigationItems = [
     {
       title: "Dashboard",
       href: "/",
@@ -55,7 +59,11 @@ const Navigation = () => {
       href: "/indirect-materials",
       icon: Wrench,
       description: "Utilities & indirect materials"
-    },
+    }
+  ];
+
+  // Management group
+  const managementItems = [
     {
       title: "Finished Products",
       href: "/finished-products",
@@ -79,7 +87,11 @@ const Navigation = () => {
       href: "/cost-analysis",
       icon: DollarSign,
       description: "Cost tracking & optimization"
-    },
+    }
+  ];
+
+  // Analytics group
+  const analyticsItems = [
     {
       title: "Predictive Analytics",
       href: "/predictive-analytics",
@@ -93,6 +105,16 @@ const Navigation = () => {
       description: "Report generation & exports"
     },
     {
+      title: "Analytics",
+      href: "/analytics",
+      icon: BarChart3,
+      description: "Reports & insights"
+    }
+  ];
+
+  // Compliance group
+  const complianceItems = [
+    {
       title: "ISCC+ Certification",
       href: "/certification",
       icon: Award,
@@ -103,13 +125,15 @@ const Navigation = () => {
       href: "/carbon",
       icon: Leaf,
       description: "Emissions & sustainability"
-    },
-    {
-      title: "Analytics",
-      href: "/analytics",
-      icon: BarChart3,
-      description: "Reports & insights"
     }
+  ];
+
+  // All items for mobile menu
+  const allNavigationItems = [
+    ...coreNavigationItems,
+    ...managementItems,
+    ...analyticsItems,
+    ...complianceItems
   ];
 
   const isActive = (href: string) => {
@@ -119,23 +143,60 @@ const Navigation = () => {
     return location.pathname.startsWith(href);
   };
 
+  // Dropdown menu component
+  const DropdownMenu = ({ title, items, icon: Icon }: { title: string; items: any[]; icon: any }) => (
+    <div className="relative group">
+      <Button
+        variant="ghost"
+        className="flex items-center px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+      >
+        <Icon className="h-4 w-4 mr-2" />
+        {title}
+        <ChevronDown className="h-3 w-3 ml-1" />
+      </Button>
+
+      <div className="absolute left-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+        <div className="py-2">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                isActive(item.href)
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+              }`}
+            >
+              <item.icon className="h-4 w-4 mr-3 flex-shrink-0" />
+              <div>
+                <div className="font-medium">{item.title}</div>
+                <div className="text-xs text-gray-500">{item.description}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex bg-white border-b border-gray-200 px-6 py-4">
+      <nav className="hidden lg:flex bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
+          <div className="flex items-center space-x-8 min-w-0 flex-1">
+            <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
               <Database className="h-8 w-8 text-blue-600" />
               <span className="text-xl font-bold text-gray-900">ISCC+ Manager</span>
             </Link>
 
-            <div className="flex space-x-1">
-              {navigationItems.map((item) => (
+            <div className="flex items-center space-x-1 overflow-x-auto scrollbar-hide">
+              {/* Core Navigation Items */}
+              {coreNavigationItems.map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
-                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
                     isActive(item.href)
                       ? "bg-blue-100 text-blue-700"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -145,15 +206,137 @@ const Navigation = () => {
                   {item.title}
                 </Link>
               ))}
+
+              {/* Management Dropdown */}
+              <DropdownMenu
+                title="Management"
+                items={managementItems}
+                icon={Building}
+              />
+
+              {/* Analytics Dropdown */}
+              <DropdownMenu
+                title="Analytics"
+                items={analyticsItems}
+                icon={BarChart3}
+              />
+
+              {/* Compliance Dropdown */}
+              <DropdownMenu
+                title="Compliance"
+                items={complianceItems}
+                icon={Award}
+              />
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <Button variant="outline" size="sm">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
           </div>
+        </div>
+      </nav>
+
+      {/* Tablet Navigation */}
+      <nav className="hidden md:flex lg:hidden bg-white border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center justify-between w-full">
+          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
+            <Database className="h-6 w-6 text-blue-600" />
+            <span className="text-lg font-bold text-gray-900">ISCC+ Manager</span>
+          </Link>
+
+          <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide">
+            {coreNavigationItems.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0 ${
+                  isActive(item.href)
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
+              >
+                <item.icon className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">{item.title}</span>
+              </Link>
+            ))}
+
+            {/* More Menu for Tablet */}
+            <div className="relative group">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+                <ChevronDown className="h-3 w-3 ml-1" />
+              </Button>
+
+              <div className="absolute right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Management
+                  </div>
+                  {managementItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                        isActive(item.href)
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4 mr-3" />
+                      {item.title}
+                    </Link>
+                  ))}
+
+                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+                    Analytics
+                  </div>
+                  {analyticsItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                        isActive(item.href)
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4 mr-3" />
+                      {item.title}
+                    </Link>
+                  ))}
+
+                  <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+                    Compliance
+                  </div>
+                  {complianceItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                        isActive(item.href)
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4 mr-3" />
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Button variant="outline" size="sm" className="flex-shrink-0">
+            <Settings className="h-4 w-4" />
+          </Button>
         </div>
       </nav>
 
@@ -181,7 +364,7 @@ const Navigation = () => {
 
           {isMobileMenuOpen && (
             <div className="mt-4 space-y-2">
-              {navigationItems.map((item) => (
+              {allNavigationItems.map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
