@@ -4,17 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Home,
-  Package,
-  Factory,
-  Award,
-  BarChart3,
+  ShoppingCart,
+  FileText,
   Settings,
   Menu,
   X,
   Leaf,
-  FileText,
+  BarChart3,
+  Award,
+  Zap,
+  Package,
   Truck,
-  Database
+  Database,
+  ClipboardList,
+  Wrench,
+  Box,
+  Factory,
+  Building,
+  Shield,
+  DollarSign,
+  Brain,
+  Download
 } from "lucide-react";
 
 const Navigation = () => {
@@ -29,16 +39,58 @@ const Navigation = () => {
       description: "Overview & key metrics"
     },
     {
-      title: "Material Management",
-      href: "/materials",
-      icon: Package,
-      description: "Raw materials & sustainability"
+      title: "Order & Stock",
+      href: "/order-stock",
+      icon: ShoppingCart,
+      description: "Purchase orders & inventory"
     },
     {
-      title: "Production",
-      href: "/production",
-      icon: Factory,
-      description: "Batch management & planning"
+      title: "Production Plan",
+      href: "/production-plan",
+      icon: ClipboardList,
+      description: "Production planning & instructions"
+    },
+    {
+      title: "Indirect Materials",
+      href: "/indirect-materials",
+      icon: Wrench,
+      description: "Utilities & indirect materials"
+    },
+    {
+      title: "Finished Products",
+      href: "/finished-products",
+      icon: Box,
+      description: "Product inventory & certificates"
+    },
+    {
+      title: "Supplier Portal",
+      href: "/supplier-portal",
+      icon: Building,
+      description: "Supplier management & relations"
+    },
+    {
+      title: "Quality Management",
+      href: "/quality",
+      icon: Shield,
+      description: "Quality control & compliance"
+    },
+    {
+      title: "Cost Analysis",
+      href: "/cost-analysis",
+      icon: DollarSign,
+      description: "Cost tracking & optimization"
+    },
+    {
+      title: "Predictive Analytics",
+      href: "/predictive-analytics",
+      icon: Brain,
+      description: "AI-powered predictions & insights"
+    },
+    {
+      title: "Advanced Reporting",
+      href: "/advanced-reporting",
+      icon: Download,
+      description: "Report generation & exports"
     },
     {
       title: "ISCC+ Certification",

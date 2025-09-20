@@ -5,11 +5,18 @@ A comprehensive production management system for sustainable materials with ISCC
 ## 🌟 Features
 
 ### Core Functionality
-- **Material Management**: Track raw materials with sustainability parameters and certification status
-- **Production Management**: Batch management with unique identifiers and real-time monitoring
-- **ISCC+ Certification**: Complete certificate management with audit trails and compliance monitoring
-- **Carbon Footprint Tracking**: Real-time carbon emission calculations and reduction initiatives
-- **Analytics & Reporting**: Comprehensive insights with production, sustainability, and financial metrics
+- **Order & Stock Management**: Purchase order processing, inventory tracking, material receiving/shipping
+- **Production Planning**: Production scheduling, batch management, instruction creation
+- **Indirect Materials**: Utilities management, energy consumption, chemical tracking
+- **Finished Products**: Product inventory, certificate management, shipping orders
+- **Supplier Portal**: Supplier management, performance evaluation, relationship tracking
+- **Quality Management**: Quality control, testing procedures, compliance monitoring
+- **Cost Analysis**: Cost tracking, optimization opportunities, ROI analysis
+- **Predictive Analytics**: AI-powered demand forecasting, quality predictions, risk assessment
+- **Advanced Reporting**: Automated report generation, multi-format exports, scheduled distribution
+- **ISCC+ Certification**: Complete certificate management, audit trails, compliance monitoring
+- **Carbon Footprint**: Emission tracking, sustainability metrics, reduction initiatives
+- **Analytics Dashboard**: Comprehensive insights across all business functions
 
 ### Key Capabilities
 - **Mass Balance Methodology**: Implements ISCC+ mass balance calculation for sustainable materials
@@ -76,56 +83,156 @@ src/
 │   │   ├── RawMaterialInput.tsx
 │   │   ├── BatchManagement.tsx
 │   │   └── CertificateGenerator.tsx
+│   ├── SupplierPortal.tsx      # Supplier management
+│   ├── QualityManagement.tsx   # Quality control system
+│   ├── CostAnalysis.tsx        # Cost tracking & optimization
+│   ├── PredictiveAnalytics.tsx # AI-powered predictions
+│   ├── AdvancedReporting.tsx   # Report generation & exports
 │   └── Navigation.tsx   # Main navigation component
 ├── pages/               # Page Components
-│   ├── Index.tsx        # Dashboard overview
-│   ├── Materials.tsx    # Material management
-│   ├── Production.tsx   # Production management
-│   ├── Certification.tsx # ISCC+ certification
-│   ├── Carbon.tsx       # Carbon footprint
-│   └── Analytics.tsx    # Analytics & reporting
+│   ├── Index.tsx             # Dashboard overview
+│   ├── OrderStock.tsx         # Order & stock management
+│   ├── ProductionPlan.tsx     # Production planning
+│   ├── IndirectMaterials.tsx  # Utilities & indirect materials
+│   ├── FinishedProducts.tsx    # Product inventory & certificates
+│   ├── SupplierPortal.tsx     # Supplier management
+│   ├── Quality.tsx            # Quality management
+│   ├── CostAnalysis.tsx       # Cost analysis
+│   ├── PredictiveAnalytics.tsx # Predictive insights
+│   ├── AdvancedReporting.tsx  # Advanced reporting
+│   ├── Certification.tsx       # ISCC+ certification
+│   ├── Carbon.tsx            # Carbon footprint
+│   └── Analytics.tsx         # Analytics & reporting
 ├── lib/                 # Utility functions and data
 └── App.tsx             # Main application component
 ```
 
+## 📋 Input Requirements & Operation Flow
+
+### Input Information Requirements
+The system requires comprehensive input data for ISCC+ compliance and production management:
+
+**Core Input Categories:**
+- **Master Data**: Materials, suppliers, products with certification details
+- **Production Data**: Plans, actual results, quality control records
+- **Inventory Data**: Purchase orders, receiving, shipping, stock levels
+- **ISCC+ Data**: Mass balance calculations, certificate information, carbon footprint
+- **Quality Data**: Inspection results, testing records, compliance verification
+- **Cost Data**: Material costs, labor, overhead, budget tracking
+- **Supplier Data**: Performance evaluations, sustainability metrics
+- **Analytics Data**: Market trends, forecasts, external data sources
+
+### Daily Operation Flow
+**8:00-8:30**: System startup and daily planning confirmation
+**Throughout day**: Real-time production data entry, material receiving/shipping
+**Shift end**: Production results entry, quality inspection records
+**Daily**: Inventory reconciliation, mass balance calculations
+
+### Weekly Operation Flow
+**Weekly**: Supplier performance evaluation, inventory counts
+**Planning**: Weekly production planning and scheduling
+
+### Monthly Operation Flow
+**Monthly**: ISCC+ reporting, carbon footprint calculations, financial closing
+**Quality**: Monthly quality reports and improvement tracking
+
+### Annual Operation Flow
+**Annual**: ISCC+ certification renewal, annual planning, budget preparation
+
+For detailed input requirements and operation procedures, see the documentation in the `docs/` folder:
+
+- `docs/INPUT_REQUIREMENTS.md` - Comprehensive input data specifications
+- `docs/OPERATION_FLOW.md` - Daily operation procedures and timing
+- `docs/INPUT_PRIORITIES.md` - Data priority and quality management
+
 ## 🎯 Application Architecture
 
 ### Dashboard Overview
-The main dashboard provides a summary view with:
-- Key metrics and statistics
-- Quick navigation cards
-- Recent activities
-- System status indicators
+The main dashboard provides a comprehensive summary view with:
+- Key performance indicators across all modules
+- Quick navigation cards to all functional areas
+- Recent activities and system alerts
+- Real-time status indicators and notifications
 
-### Material Management
-- Raw material tracking with sustainability parameters
-- Certification status management
-- Inventory monitoring
-- Supplier information
+### Order & Stock Management
+- Purchase order creation and tracking
+- Material receiving and inspection
+- Inventory management with lot tracking
+- Supplier performance monitoring
 
-### Production Management
-- Batch creation and tracking
-- Production line monitoring
-- Quality control integration
-- Real-time performance metrics
+### Production Planning & Execution
+- Production scheduling and capacity planning
+- Batch management with unique identifiers
+- Work instruction generation and distribution
+- Real-time production monitoring and OEE tracking
 
-### ISCC+ Certification
+### Quality Management System
+- Quality inspection procedures and checklists
+- Test result management and trend analysis
+- Non-conformance tracking and corrective actions
+- Quality standards and compliance monitoring
+
+### Supplier Relationship Management
+- Supplier evaluation and scoring
+- Certification status tracking
+- Performance metrics and KPIs
+- Communication and collaboration tools
+
+### Cost Analysis & Optimization
+- Real-time cost tracking by category
+- Optimization opportunity identification
+- ROI analysis for improvement projects
+- Budget vs. actual variance analysis
+
+### Predictive Analytics & AI
+- Demand forecasting using machine learning
+- Quality issue prediction and prevention
+- Supply chain risk assessment
+- Production efficiency optimization
+
+### Advanced Reporting System
+- Automated report generation and distribution
+- Multiple export formats (PDF, Excel, PowerPoint)
+- Scheduled report delivery
+- Custom report builder
+
+### ISCC+ Certification Management
+- Mass balance calculations and reporting
 - Certificate lifecycle management
-- Audit trail tracking
-- Compliance monitoring
-- Automated certificate generation
+- Audit preparation and response
+- Compliance monitoring and documentation
 
-### Carbon Footprint
-- Emission factor database
-- Real-time carbon calculations
-- Reduction initiatives tracking
-- Sustainability reporting
+### Carbon Footprint Management
+- Scope 1, 2, and 3 emissions tracking
+- Carbon footprint calculation and reporting
+- Reduction initiative management
+- Sustainability metrics and KPIs
 
-### Analytics & Reporting
-- Production performance metrics
-- Financial analysis
-- Sustainability KPIs
-- Export capabilities
+## 🚀 Key Benefits
+
+### For ISCC+ Compliance
+- **Guaranteed Compliance**: Built-in ISCC+ mass balance methodology and audit trails
+- **Automated Reporting**: Automated generation of compliance reports and certificates
+- **Risk Mitigation**: Real-time monitoring and alerts for compliance issues
+- **Audit Ready**: Complete documentation and traceability for certification audits
+
+### For Operational Efficiency
+- **Real-time Visibility**: Live dashboards and real-time data across all operations
+- **Process Optimization**: AI-powered insights for continuous improvement
+- **Resource Optimization**: Better planning and utilization of resources
+- **Decision Support**: Data-driven insights for better business decisions
+
+### For Sustainability Management
+- **Carbon Tracking**: Comprehensive carbon footprint monitoring and reporting
+- **Supplier Sustainability**: Supplier sustainability performance tracking
+- **Resource Efficiency**: Monitoring and optimization of resource usage
+- **Environmental Compliance**: Meeting environmental regulations and standards
+
+### For Business Intelligence
+- **360° Visibility**: Complete visibility across all business functions
+- **Predictive Insights**: AI-powered predictions for better planning
+- **Performance Monitoring**: KPI tracking and performance management
+- **Strategic Planning**: Data-driven strategic decision making
 
 ## 🔧 Configuration
 

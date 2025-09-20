@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
-  Package,
-  Factory,
+  ShoppingCart,
+  ClipboardList,
+  Wrench,
+  Box,
   Award,
   BarChart3,
   Leaf,
@@ -19,7 +21,10 @@ import {
   Settings,
   FileText,
   Truck,
-  Globe
+  Package,
+  Factory,
+  Building,
+  Shield
 } from "lucide-react";
 import {
   generateRawMaterialData,
@@ -32,12 +37,12 @@ import {
 const Index = () => {
   // Dashboard summary statistics
   const dashboardStats = {
-    totalMaterials: 24,
-    certifiedMaterials: 18,
-    activeBatches: 3,
-    completedToday: 12,
-    totalCertificates: 24,
-    activeCertificates: 18,
+    totalOrders: 156,
+    totalInventory: 342,
+    activePlans: 8,
+    activeBatches: 6,
+    biomassProducts: 98,
+    totalValue: 8950000,
     carbonReduction: 21.4,
     efficiency: 87.5
   };
@@ -45,30 +50,48 @@ const Index = () => {
   // Quick navigation cards
   const navigationCards = [
     {
-      title: "Material Management",
-      description: "Manage raw materials with sustainability tracking",
-      icon: Package,
-      href: "/materials",
+      title: "Order & Stock",
+      description: "Manage purchase orders and inventory tracking",
+      icon: ShoppingCart,
+      href: "/order-stock",
       color: "blue",
-      stats: `${dashboardStats.totalMaterials} materials`,
+      stats: `${dashboardStats.totalOrders} orders`,
       trend: "up"
     },
     {
-      title: "Production",
-      description: "Batch management and production planning",
-      icon: Factory,
-      href: "/production",
+      title: "Production Plan",
+      description: "Production planning and batch instructions",
+      icon: ClipboardList,
+      href: "/production-plan",
       color: "green",
-      stats: `${dashboardStats.activeBatches} active batches`,
+      stats: `${dashboardStats.activePlans} active plans`,
       trend: "stable"
     },
     {
+      title: "Indirect Materials",
+      description: "Utilities and indirect materials management",
+      icon: Wrench,
+      href: "/indirect-materials",
+      color: "orange",
+      stats: `${dashboardStats.totalInventory} items`,
+      trend: "up"
+    },
+    {
+      title: "Finished Products",
+      description: "Product inventory and certificate management",
+      icon: Box,
+      href: "/finished-products",
+      color: "purple",
+      stats: `${dashboardStats.biomassProducts} products`,
+      trend: "up"
+    },
+    {
       title: "ISCC+ Certification",
-      description: "Manage certificates and compliance",
+      description: "Certificate management and compliance",
       icon: Award,
       href: "/certification",
-      color: "purple",
-      stats: `${dashboardStats.activeCertificates} active`,
+      color: "emerald",
+      stats: "Certified products",
       trend: "up"
     },
     {
@@ -76,8 +99,26 @@ const Index = () => {
       description: "Track emissions and sustainability metrics",
       icon: Leaf,
       href: "/carbon",
-      color: "emerald",
+      color: "teal",
       stats: `${dashboardStats.carbonReduction}% reduction`,
+      trend: "up"
+    },
+    {
+      title: "Supplier Portal",
+      description: "Supplier management and relationships",
+      icon: Building,
+      href: "/supplier-portal",
+      color: "cyan",
+      stats: "24 suppliers",
+      trend: "up"
+    },
+    {
+      title: "Quality Management",
+      description: "Quality control and compliance monitoring",
+      icon: Shield,
+      href: "/quality",
+      color: "rose",
+      stats: "80.8% pass rate",
       trend: "up"
     },
     {
@@ -85,7 +126,7 @@ const Index = () => {
       description: "Comprehensive insights and reporting",
       icon: BarChart3,
       href: "/analytics",
-      color: "orange",
+      color: "indigo",
       stats: `${dashboardStats.efficiency}% efficiency`,
       trend: "up"
     }
@@ -171,10 +212,10 @@ const Index = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Materials</p>
-                  <p className="text-2xl font-bold">{dashboardStats.totalMaterials}</p>
+                  <p className="text-sm text-muted-foreground">Total Orders</p>
+                  <p className="text-2xl font-bold">{dashboardStats.totalOrders}</p>
                 </div>
-                <Package className="h-8 w-8 text-blue-600" />
+                <ShoppingCart className="h-8 w-8 text-blue-600" />
               </div>
             </CardContent>
           </Card>
@@ -182,10 +223,10 @@ const Index = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Active Batches</p>
-                  <p className="text-2xl font-bold">{dashboardStats.activeBatches}</p>
+                  <p className="text-sm text-muted-foreground">Active Plans</p>
+                  <p className="text-2xl font-bold">{dashboardStats.activePlans}</p>
                 </div>
-                <Factory className="h-8 w-8 text-green-600" />
+                <ClipboardList className="h-8 w-8 text-green-600" />
               </div>
             </CardContent>
           </Card>
@@ -193,28 +234,28 @@ const Index = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Certificates</p>
-                  <p className="text-2xl font-bold">{dashboardStats.activeCertificates}</p>
-                </div>
-                <Award className="h-8 w-8 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Carbon Reduction</p>
-                  <p className="text-2xl font-bold text-green-600">{dashboardStats.carbonReduction}%</p>
+                  <p className="text-sm text-muted-foreground">Biomass Products</p>
+                  <p className="text-2xl font-bold">{dashboardStats.biomassProducts}</p>
                 </div>
                 <Leaf className="h-8 w-8 text-emerald-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Inventory Value</p>
+                  <p className="text-2xl font-bold">${(dashboardStats.totalValue / 1000000).toFixed(1)}M</p>
+                </div>
+                <BarChart3 className="h-8 w-8 text-purple-600" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Navigation Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {navigationCards.map((card, index) => (
             <Link key={index} to={card.href}>
               <Card className="hover:shadow-lg transition-shadow cursor-pointer h-48">
@@ -265,21 +306,21 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <Link to="/materials">
+                <Link to="/order-stock">
                   <Button variant="outline" className="w-full justify-start">
-                    <Package className="h-4 w-4 mr-2" />
-                    Add New Material
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Create Purchase Order
                   </Button>
                 </Link>
-                <Link to="/production">
+                <Link to="/production-plan">
                   <Button variant="outline" className="w-full justify-start">
-                    <Factory className="h-4 w-4 mr-2" />
-                    Create New Batch
+                    <ClipboardList className="h-4 w-4 mr-2" />
+                    Create Production Plan
                   </Button>
                 </Link>
-                <Link to="/certification">
+                <Link to="/finished-products">
                   <Button variant="outline" className="w-full justify-start">
-                    <Award className="h-4 w-4 mr-2" />
+                    <Box className="h-4 w-4 mr-2" />
                     Generate Certificate
                   </Button>
                 </Link>
@@ -287,6 +328,18 @@ const Index = () => {
                   <Button variant="outline" className="w-full justify-start">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     View Reports
+                  </Button>
+                </Link>
+                <Link to="/supplier-portal">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Building className="h-4 w-4 mr-2" />
+                    Add Supplier
+                  </Button>
+                </Link>
+                <Link to="/quality">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Shield className="h-4 w-4 mr-2" />
+                    Run Quality Test
                   </Button>
                 </Link>
               </div>
