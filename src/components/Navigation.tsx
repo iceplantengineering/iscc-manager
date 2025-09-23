@@ -25,7 +25,8 @@ import {
   Activity,
   Layers,
   Hash,
-  Zap
+  Zap,
+  Cloud
 } from "lucide-react";
 
 const Navigation = () => {
