@@ -20,7 +20,9 @@
       "Bash(findstr:*)",
       "Bash(tasklist:*)",
       "Bash(cross-env:*)",
-      "Bash(vite)"
+      "Bash(vite)",
+      "Bash(node:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
