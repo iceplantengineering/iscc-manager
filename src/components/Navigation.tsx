@@ -53,12 +53,6 @@ const Navigation = () => {
       description: "Overview & key metrics"
     },
     {
-      title: "ISCC+ Certification",
-      href: "/certification",
-      icon: Award,
-      description: "Certificates & compliance"
-    },
-    {
       title: "Order & Stock",
       href: "/order-stock",
       icon: ShoppingCart,
@@ -144,6 +138,33 @@ const Navigation = () => {
     }
   ];
 
+  const certificationItems = [
+    {
+      title: "Certificate Management",
+      href: "/certification",
+      icon: Award,
+      description: "ISCC+ certificates & compliance management"
+    },
+    {
+      title: "Mass Balance Dashboard",
+      href: "/mass-balance",
+      icon: Scale,
+      description: "Real-time IMBL monitoring & pool management"
+    },
+    {
+      title: "Certificate Generator",
+      href: "/certificate-generator",
+      icon: Award,
+      description: "Automated ISCC+ certificate generation"
+    },
+    {
+      title: "ISA-95 Integration",
+      href: "/isa95-integration",
+      icon: Layers,
+      description: "Automation pyramid integration & contract validation"
+    }
+  ];
+
   const complianceItems = [
     {
       title: "Carbon Footprint",
@@ -165,33 +186,12 @@ const Navigation = () => {
     }
   ];
 
-  const imblItems = [
-    {
-      title: "Mass Balance Dashboard",
-      href: "/mass-balance",
-      icon: Scale,
-      description: "Real-time IMBL monitoring & pool management"
-    },
-    {
-      title: "Certificate Generator",
-      href: "/certificate-generator",
-      icon: Award,
-      description: "Automated ISCC+ certificate generation"
-    },
-    {
-      title: "ISA-95 Integration",
-      href: "/isa95-integration",
-      icon: Layers,
-      description: "Automation pyramid integration & contract validation"
-    }
-  ];
-
   const allNavigationItems = [
     ...coreNavigationItems,
     ...managementItems,
     ...analyticsItems,
-    ...complianceItems,
-    ...imblItems
+    ...certificationItems,
+    ...complianceItems
   ];
 
   const isActive = (href: string) => {
@@ -299,15 +299,15 @@ const Navigation = () => {
             />
 
             <DropdownMenu
-              title="Compliance"
-              items={complianceItems}
+              title="ISCC+ Certification"
+              items={certificationItems}
               icon={Award}
             />
 
             <DropdownMenu
-              title="IMBL System"
-              items={imblItems}
-              icon={Scale}
+              title="Compliance"
+              items={complianceItems}
+              icon={Leaf}
             />
           </div>
         </div>
@@ -392,9 +392,9 @@ const Navigation = () => {
                     ))}
 
                     <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
-                      Compliance
+                      ISCC+ Certification
                     </div>
-                    {complianceItems.map((item) => (
+                    {certificationItems.map((item) => (
                       <Link
                         key={item.href}
                         to={item.href}
@@ -411,9 +411,9 @@ const Navigation = () => {
                     ))}
 
                     <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
-                      IMBL System
+                      Compliance
                     </div>
-                    {imblItems.map((item) => (
+                    {complianceItems.map((item) => (
                       <Link
                         key={item.href}
                         to={item.href}

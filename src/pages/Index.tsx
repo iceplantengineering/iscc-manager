@@ -89,16 +89,7 @@ const Index = () => {
       stats: `${dashboardStats.biomassProducts} products`,
       trend: "up"
     },
-    {
-      title: "ISCC+ Certification",
-      description: "Certificate management and compliance",
-      icon: Award,
-      href: "/certification",
-      color: "emerald",
-      stats: "Certified products",
-      trend: "up"
-    },
-    {
+        {
       title: "Carbon Footprint",
       description: "Track emissions and sustainability metrics",
       icon: Leaf,
@@ -170,25 +161,7 @@ const Index = () => {
       stats: "Real-time monitoring",
       trend: "up"
     },
-    {
-      title: "IMBL Dashboard",
-      description: "Immutable Mass Balance Ledger monitoring",
-      icon: Database,
-      href: "/mass-balance",
-      color: "emerald",
-      stats: "Real-time tracking",
-      trend: "up"
-    },
-    {
-      title: "Certificate Generator",
-      description: "Automated ISCC+ certificate generation",
-      icon: Award,
-      href: "/certificate-generator",
-      color: "purple",
-      stats: "Auto-generation",
-      trend: "up"
-    }
-  ];
+      ];
 
   // Recent activities
   const recentActivities = [
