@@ -8,15 +8,23 @@ import Index from "./pages/Index";
 import OrderStock from "./pages/OrderStock";
 import ProductionPlan from "./pages/ProductionPlan";
 import IndirectMaterials from "./pages/IndirectMaterials";
+import UtilityManagement from "./pages/UtilityManagement";
 import FinishedProducts from "./pages/FinishedProducts";
 import Certification from "./pages/Certification";
 import Carbon from "./pages/Carbon";
+import EnvironmentalMonitoring from "./pages/EnvironmentalMonitoring";
 import Analytics from "./pages/Analytics";
 import SupplierPortal from "./pages/SupplierPortal";
 import Quality from "./pages/Quality";
 import CostAnalysis from "./pages/CostAnalysis";
 import PredictiveAnalytics from "./pages/PredictiveAnalytics";
 import AdvancedReporting from "./pages/AdvancedReporting";
+import MassBalanceDashboard from "./components/imbl/MassBalanceDashboard";
+import CertificateGenerator from "./components/imbl/CertificateGenerator";
+import IntegrationDashboard from "./components/isa95/IntegrationDashboard";
+import EdgeCollectorDashboard from "./components/iot/EdgeCollectorDashboard";
+import DigitalProductPassport from "./pages/DigitalProductPassport";
+import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,15 +42,23 @@ const App = () => (
             <Route path="/order-stock" element={<OrderStock />} />
             <Route path="/production-plan" element={<ProductionPlan />} />
             <Route path="/indirect-materials" element={<IndirectMaterials />} />
+            <Route path="/utility-management" element={<UtilityManagement />} />
             <Route path="/finished-products" element={<FinishedProducts />} />
             <Route path="/supplier-portal" element={<SupplierPortal />} />
             <Route path="/quality" element={<Quality />} />
             <Route path="/cost-analysis" element={<CostAnalysis />} />
+            <Route path="/edge-collectors" element={<EdgeCollectorDashboard />} />
             <Route path="/predictive-analytics" element={<PredictiveAnalytics />} />
             <Route path="/advanced-reporting" element={<AdvancedReporting />} />
             <Route path="/certification" element={<Certification />} />
             <Route path="/carbon" element={<Carbon />} />
+            <Route path="/environmental-monitoring" element={<EnvironmentalMonitoring />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/mass-balance" element={<MassBalanceDashboard />} />
+            <Route path="/certificate-generator" element={<CertificateGenerator />} />
+            <Route path="/isa95-integration" element={<IntegrationDashboard />} />
+            <Route path="/digital-product-passport" element={<DigitalProductPassport />} />
+            <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

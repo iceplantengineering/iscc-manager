@@ -24,7 +24,11 @@ import {
   Package,
   Factory,
   Building,
-  Shield
+  Shield,
+  Brain,
+  Cloud,
+  Hash,
+  Zap
 } from "lucide-react";
 import {
   generateRawMaterialData,
@@ -104,6 +108,24 @@ const Index = () => {
       trend: "up"
     },
     {
+      title: "Environmental Monitoring",
+      description: "CEMS emission monitoring and compliance",
+      icon: Cloud,
+      href: "/environmental-monitoring",
+      color: "sky",
+      stats: "98.2% compliant",
+      trend: "up"
+    },
+    {
+      title: "Digital Product Passport",
+      description: "Product lifecycle transparency and DPP management",
+      icon: Hash,
+      href: "/digital-product-passport",
+      color: "indigo",
+      stats: "EU DPP Ready",
+      trend: "up"
+    },
+    {
       title: "Supplier Portal",
       description: "Supplier management and relationships",
       icon: Building,
@@ -128,6 +150,42 @@ const Index = () => {
       href: "/analytics",
       color: "indigo",
       stats: `${dashboardStats.efficiency}% efficiency`,
+      trend: "up"
+    },
+    {
+      title: "Advanced Analytics",
+      description: "AI-powered predictions and optimization",
+      icon: Brain,
+      href: "/advanced-analytics",
+      color: "purple",
+      stats: "AI models active",
+      trend: "up"
+    },
+    {
+      title: "Utility Management",
+      description: "Energy monitoring and utility optimization",
+      icon: Zap,
+      href: "/utility-management",
+      color: "yellow",
+      stats: "Real-time monitoring",
+      trend: "up"
+    },
+    {
+      title: "IMBL Dashboard",
+      description: "Immutable Mass Balance Ledger monitoring",
+      icon: Database,
+      href: "/mass-balance",
+      color: "emerald",
+      stats: "Real-time tracking",
+      trend: "up"
+    },
+    {
+      title: "Certificate Generator",
+      description: "Automated ISCC+ certificate generation",
+      icon: Award,
+      href: "/certificate-generator",
+      color: "purple",
+      stats: "Auto-generation",
       trend: "up"
     }
   ];
@@ -324,10 +382,28 @@ const Index = () => {
                     Generate Certificate
                   </Button>
                 </Link>
+                <Link to="/environmental-monitoring">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Cloud className="h-4 w-4 mr-2" />
+                    Monitor CEMS
+                  </Button>
+                </Link>
+                <Link to="/digital-product-passport">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Hash className="h-4 w-4 mr-2" />
+                    Create DPP
+                  </Button>
+                </Link>
                 <Link to="/analytics">
                   <Button variant="outline" className="w-full justify-start">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     View Reports
+                  </Button>
+                </Link>
+                <Link to="/advanced-analytics">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Brain className="h-4 w-4 mr-2" />
+                    AI Analytics
                   </Button>
                 </Link>
                 <Link to="/supplier-portal">
@@ -340,6 +416,24 @@ const Index = () => {
                   <Button variant="outline" className="w-full justify-start">
                     <Shield className="h-4 w-4 mr-2" />
                     Run Quality Test
+                  </Button>
+                </Link>
+                <Link to="/utility-management">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Zap className="h-4 w-4 mr-2" />
+                    Monitor Utilities
+                  </Button>
+                </Link>
+                <Link to="/mass-balance">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Database className="h-4 w-4 mr-2" />
+                    View IMBL Dashboard
+                  </Button>
+                </Link>
+                <Link to="/certificate-generator">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Award className="h-4 w-4 mr-2" />
+                    Generate Certificate
                   </Button>
                 </Link>
               </div>

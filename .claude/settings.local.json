@@ -22,7 +22,10 @@
       "Bash(cross-env:*)",
       "Bash(vite)",
       "Bash(node:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(powershell:*)",
+      "Bash(npm:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
