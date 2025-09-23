@@ -25,6 +25,8 @@ import IntegrationDashboard from "./components/isa95/IntegrationDashboard";
 import EdgeCollectorDashboard from "./components/iot/EdgeCollectorDashboard";
 import DigitalProductPassport from "./pages/DigitalProductPassport";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
+import ProductionPlanForm from "./components/production/ProductionPlanForm";
+import FinishedProductForm from "./components/products/FinishedProductForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +61,10 @@ const App = () => (
             <Route path="/isa95-integration" element={<IntegrationDashboard />} />
             <Route path="/digital-product-passport" element={<DigitalProductPassport />} />
             <Route path="/advanced-analytics" element={<AdvancedAnalytics />} />
+            <Route path="/production-plan/new" element={<ProductionPlanForm />} />
+            <Route path="/production-plan/edit/:id" element={<ProductionPlanForm />} />
+            <Route path="/finished-products/new" element={<FinishedProductForm />} />
+            <Route path="/finished-products/edit/:id" element={<FinishedProductForm />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
