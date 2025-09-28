@@ -27,6 +27,9 @@ import DigitalProductPassport from "./pages/DigitalProductPassport";
 import AdvancedAnalytics from "./pages/AdvancedAnalytics";
 import ProductionPlanForm from "./components/production/ProductionPlanForm";
 import FinishedProductForm from "./components/products/FinishedProductForm";
+import LLMApiSettings from "./components/settings/LLMApiSettings";
+import AIReportGenerator from "./components/reports/AIReportGenerator";
+import AICreditCalculator from "./components/credit/AICreditCalculator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +68,9 @@ const App = () => (
             <Route path="/production-plan/edit/:id" element={<ProductionPlanForm />} />
             <Route path="/finished-products/new" element={<FinishedProductForm />} />
             <Route path="/finished-products/edit/:id" element={<FinishedProductForm />} />
+            <Route path="/llm-settings" element={<LLMApiSettings />} />
+            <Route path="/ai-report-generator" element={<AIReportGenerator />} />
+            <Route path="/ai-credit-calculator" element={<AICreditCalculator />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

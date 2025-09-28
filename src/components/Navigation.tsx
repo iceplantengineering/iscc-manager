@@ -131,6 +131,18 @@ const Navigation = () => {
       description: "Report generation & exports"
     },
     {
+      title: "AI Report Generator",
+      href: "/ai-report-generator",
+      icon: Brain,
+      description: "AI-powered intelligent reporting"
+    },
+    {
+      title: "AI Credit Calculator",
+      href: "/ai-credit-calculator",
+      icon: Activity,
+      description: "Enhanced credit calculation with AI"
+    },
+    {
       title: "Predictive Analytics",
       href: "/predictive-analytics",
       icon: Activity,
@@ -162,6 +174,12 @@ const Navigation = () => {
       href: "/isa95-integration",
       icon: Layers,
       description: "Automation pyramid integration & contract validation"
+    },
+    {
+      title: "LLM API Settings",
+      href: "/llm-settings",
+      icon: Settings,
+      description: "Configure AI providers and APIs"
     }
   ];
 
