@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,13 +40,13 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
     panShipments: [],
     cfShipments: [],
     supplierData: [
-      { name: 'サプライヤーA', bmPercentage: 95, reliability: 92 },
-      { name: 'サプライヤーB', bmPercentage: 92, reliability: 88 },
-      { name: 'サプライヤーC', bmPercentage: 88, reliability: 85 },
+      { name: 'Supplier A', bmPercentage: 95, reliability: 92 },
+      { name: 'Supplier B', bmPercentage: 92, reliability: 88 },
+      { name: 'Supplier C', bmPercentage: 88, reliability: 85 },
     ],
     plantData: [
-      { id: 'plant-1', name: 'プラント1', efficiency: 87, conversionRate: 0.82 },
-      { id: 'plant-2', name: 'プラント2', efficiency: 89, conversionRate: 0.84 },
+      { id: 'plant-1', name: 'Plant 1', efficiency: 87, conversionRate: 0.82 },
+      { id: 'plant-2', name: 'Plant 2', efficiency: 89, conversionRate: 0.84 },
     ],
     timePeriod: {
       start: new Date().toISOString().split('T')[0],
@@ -62,13 +62,13 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
     }));
   };
 
-  const calculateCredits = async () => {
+  const calculateCredits = useCallback(async () => {
     setIsCalculating(true);
     try {
       const calculationResult = await aiEnhancedCreditCalculator.calculateCredits(formData, useAI);
       setResult(calculationResult);
 
-      // 習熟度データを生成
+      // Generate historical data
       const historicalData = [formData, { ...formData, anInput: formData.anInput * 0.9, panProduction: formData.panProduction * 0.88 }];
       const prediction = await aiEnhancedCreditCalculator.predictFutureCredits(
         historicalData,
@@ -79,11 +79,11 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
       );
       setPredictionData(prediction);
     } catch (error) {
-      console.error('計算に失敗しました:', error);
+      console.error('Calculation failed:', error);
     } finally {
       setIsCalculating(false);
     }
-  };
+  }, [formData, useAI]);
 
   const exportResults = () => {
     if (!result) return;
@@ -113,17 +113,45 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
     }
   };
 
+  const getSeverityText = (severity: string) => {
+    switch (severity) {
+      case 'high': return 'High';
+      case 'medium': return 'Medium';
+      case 'low': return 'Low';
+      default: return severity;
+    }
+  };
+
+  const getImpactText = (impact: string) => {
+    switch (impact) {
+      case 'positive': return 'Positive';
+      case 'negative': return 'Negative';
+      case 'neutral': return 'Neutral';
+      default: return impact;
+    }
+  };
+
   useEffect(() => {
     calculateCredits();
-  }, []);
+  }, [calculateCredits]); // Recalculate when calculateCredits function changes
+
+  // Also recalculate when form data changes and AI mode is enabled
+  useEffect(() => {
+    if (useAI && result) {
+      const timeoutId = setTimeout(() => {
+        calculateCredits();
+      }, 500); // Debounce to avoid too many calculations
+      return () => clearTimeout(timeoutId);
+    }
+  }, [formData, useAI, calculateCredits]);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">AIクレジット計算機</h2>
+          <h2 className="text-2xl font-bold">AI Credit Calculator</h2>
           <p className="text-muted-foreground">
-            AI分析による高度なクレジット計算と最適化提案
+            Advanced credit calculation and optimization with AI analysis
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -134,30 +162,30 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
           />
           <Label htmlFor="ai-mode" className="flex items-center space-x-1">
             <Brain className="w-4 h-4" />
-            <span>AIモード</span>
+            <span>AI Mode</span>
           </Label>
         </div>
       </div>
 
       <Tabs defaultValue="input" className="w-full">
         <TabsList>
-          <TabsTrigger value="input">入力データ</TabsTrigger>
-          <TabsTrigger value="results">計算結果</TabsTrigger>
-          <TabsTrigger value="insights">AI分析</TabsTrigger>
-          <TabsTrigger value="optimization">最適化</TabsTrigger>
-          <TabsTrigger value="prediction">予測</TabsTrigger>
+          <TabsTrigger value="input">Input Data</TabsTrigger>
+          <TabsTrigger value="results">Calculation Results</TabsTrigger>
+          <TabsTrigger value="insights">AI Analysis</TabsTrigger>
+          <TabsTrigger value="optimization">Optimization</TabsTrigger>
+          <TabsTrigger value="prediction">Prediction</TabsTrigger>
         </TabsList>
 
         <TabsContent value="input" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">生産データ</CardTitle>
-                <CardDescription>原材料投入と製品生産の実績データ</CardDescription>
+                <CardTitle className="text-lg">Production Data</CardTitle>
+                <CardDescription>Raw material input and production performance data</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="an-input">AN投入量 (kg)</Label>
+                  <Label htmlFor="an-input">AN Input (kg)</Label>
                   <Input
                     id="an-input"
                     type="number"
@@ -167,7 +195,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pan-production">PAN生産量 (kg)</Label>
+                  <Label htmlFor="pan-production">PAN Production (kg)</Label>
                   <Input
                     id="pan-production"
                     type="number"
@@ -177,7 +205,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="cf-production">CF生産量 (kg)</Label>
+                  <Label htmlFor="cf-production">CF Production (kg)</Label>
                   <Input
                     id="cf-production"
                     type="number"
@@ -190,12 +218,12 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                   {isCalculating ? (
                     <>
                       <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                      計算中...
+                      Calculating...
                     </>
                   ) : (
                     <>
                       <Calculator className="w-4 h-4 mr-2" />
-                      クレジット計算
+                      Calculate Credits
                     </>
                   )}
                 </Button>
@@ -204,16 +232,16 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">サプライヤー・プラントデータ</CardTitle>
-                <CardDescription>サプライヤーとプラントのパフォーマンスデータ</CardDescription>
+                <CardTitle className="text-lg">Supplier & Plant Data</CardTitle>
+                <CardDescription>Supplier and plant performance data</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <Label>サプライヤーデータ</Label>
+                  <Label>Supplier Data</Label>
                   {formData.supplierData.map((supplier, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-2">
+                    <div key={index} className="grid grid-cols-3 gap-3">
                       <Input
-                        placeholder="サプライヤー名"
+                        placeholder="Supplier name"
                         value={supplier.name}
                         onChange={(e) => {
                           const newSuppliers = [...formData.supplierData];
@@ -233,7 +261,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                       />
                       <Input
                         type="number"
-                        placeholder="信頼性%"
+                        placeholder="Reliability%"
                         value={supplier.reliability}
                         onChange={(e) => {
                           const newSuppliers = [...formData.supplierData];
@@ -246,11 +274,11 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                 </div>
 
                 <div className="space-y-3">
-                  <Label>プラントデータ</Label>
+                  <Label>Plant Data</Label>
                   {formData.plantData.map((plant, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-2">
+                    <div key={index} className="grid grid-cols-3 gap-3">
                       <Input
-                        placeholder="プラント名"
+                        placeholder="Plant name"
                         value={plant.name}
                         onChange={(e) => {
                           const newPlants = [...formData.plantData];
@@ -260,7 +288,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                       />
                       <Input
                         type="number"
-                        placeholder="効率%"
+                        placeholder="Efficiency%"
                         value={plant.efficiency}
                         onChange={(e) => {
                           const newPlants = [...formData.plantData];
@@ -270,7 +298,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                       />
                       <Input
                         type="number"
-                        placeholder="変換率"
+                        placeholder="Conversion rate"
                         value={plant.conversionRate}
                         onChange={(e) => {
                           const newPlants = [...formData.plantData];
@@ -288,31 +316,31 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
         <TabsContent value="results" className="space-y-4">
           {result ? (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <PieChart className="w-5 h-5" />
-                    <span>クレジット概要</span>
+                    <span>Credit Summary</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span>ANクレジット</span>
+                      <span>AN Credits</span>
                       <span className="font-semibold">{result.anCredits.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>PANクレジット</span>
+                      <span>PAN Credits</span>
                       <span className="font-semibold">{result.panCredits.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>CFクレジット</span>
+                      <span>CF Credits</span>
                       <span className="font-semibold">{result.cfCredits.toFixed(2)}</span>
                     </div>
                     <div className="border-t pt-2">
                       <div className="flex justify-between font-bold">
-                        <span>総クレジット</span>
+                        <span>Total Credits</span>
                         <span>{result.totalCredits.toFixed(2)}</span>
                       </div>
                     </div>
@@ -320,18 +348,18 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span>使用済み</span>
+                      <span>Used</span>
                       <span className="text-red-600">-{result.creditsUsed.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between font-bold">
-                      <span>利用可能</span>
+                      <span>Available</span>
                       <span className="text-green-600">{result.availableCredits.toFixed(2)}</span>
                     </div>
                   </div>
 
                   <div className="pt-2 border-t">
                     <div className="flex justify-between text-sm">
-                      <span>信頼度</span>
+                      <span>Confidence</span>
                       <span className={getConfidenceColor(result.metadata.confidence)}>
                         {(result.metadata.confidence * 100).toFixed(1)}%
                       </span>
@@ -344,13 +372,13 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <BarChart3 className="w-5 h-5" />
-                    <span>計算詳細</span>
+                    <span>Calculation Details</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label>換算係数</Label>
+                      <Label>Conversion Factors</Label>
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                           <span>AN → PAN</span>
@@ -368,7 +396,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                     </div>
 
                     <div className="space-y-2">
-                      <Label>計算式</Label>
+                      <Label>Calculations</Label>
                       <div className="space-y-1 text-xs">
                         <div className="bg-gray-50 p-2 rounded">
                           {result.calculations.anCreditCalculation}
@@ -386,11 +414,11 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                   <div className="flex space-x-2">
                     <Button variant="outline" onClick={exportResults} className="flex-1">
                       <Download className="w-4 h-4 mr-2" />
-                      結果をエクスポート
+                      Export Results
                     </Button>
                     <Button onClick={calculateCredits} disabled={isCalculating} className="flex-1">
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      再計算
+                      Recalculate
                     </Button>
                   </div>
                 </CardContent>
@@ -401,7 +429,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
               <CardContent className="text-center py-8">
                 <Calculator className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">
-                  計算を実行すると結果が表示されます
+                  Run calculation to see results
                 </p>
               </CardContent>
             </Card>
@@ -409,13 +437,13 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
         </TabsContent>
 
         <TabsContent value="insights" className="space-y-4">
-          {result && (result.anomalies.length > 0 || result.aiInsights.summary) ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {result ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <AlertTriangle className="w-5 h-5" />
-                    <span>検出された異常</span>
+                    <span>Detected Anomalies</span>
                     <Badge variant="outline">{result.anomalies.length}</Badge>
                   </CardTitle>
                 </CardHeader>
@@ -429,7 +457,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                             <div className="font-medium">{anomaly.description}</div>
                             <div className="text-sm mt-1">{anomaly.recommendation}</div>
                             <Badge variant={getSeverityColor(anomaly.severity)} className="mt-2">
-                              {anomaly.severity}
+                              {getSeverityText(anomaly.severity)}
                             </Badge>
                           </AlertDescription>
                         </Alert>
@@ -439,7 +467,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                     <div className="text-center py-4">
                       <CheckCircle className="w-8 h-8 mx-auto text-green-500 mb-2" />
                       <p className="text-sm text-muted-foreground">
-                        異常は検出されませんでした
+                        No anomalies detected
                       </p>
                     </div>
                   )}
@@ -450,20 +478,38 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <Brain className="w-5 h-5" />
-                    <span>AIインサイト</span>
+                    <span>AI Insights</span>
+                    <Badge variant={result.metadata.calculationMethod === 'ai_enhanced' ? 'default' : 'secondary'}>
+                      {result.metadata.calculationMethod === 'ai_enhanced' ? 'AI Enhanced' : 'Standard'}
+                    </Badge>
                   </CardTitle>
+                  <CardDescription>
+                    {result.metadata.calculationMethod === 'ai_enhanced'
+                      ? 'Analysis powered by AI with detailed insights'
+                      : 'Standard calculation without AI enhancement'
+                    }
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {!useAI && (
+                    <Alert>
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertDescription>
+                        Enable AI mode to get detailed AI-powered insights and recommendations.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
                   {result.aiInsights.summary && (
                     <div>
-                      <Label>サマリー</Label>
+                      <Label>Summary</Label>
                       <p className="text-sm mt-1">{result.aiInsights.summary}</p>
                     </div>
                   )}
 
                   {result.aiInsights.keyFindings.length > 0 && (
                     <div>
-                      <Label>主要な発見</Label>
+                      <Label>Key Findings</Label>
                       <ul className="mt-2 space-y-1">
                         {result.aiInsights.keyFindings.map((finding, index) => (
                           <li key={index} className="text-sm flex items-start space-x-2">
@@ -477,7 +523,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
                   {result.aiInsights.recommendations.length > 0 && (
                     <div>
-                      <Label>推奨事項</Label>
+                      <Label>Recommendations</Label>
                       <ul className="mt-2 space-y-1">
                         {result.aiInsights.recommendations.map((recommendation, index) => (
                           <li key={index} className="text-sm flex items-start space-x-2">
@@ -496,7 +542,10 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
               <CardContent className="text-center py-8">
                 <Brain className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">
-                  AIモードで計算を実行すると分析結果が表示されます
+                  Please run calculation to see analysis results
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Enable AI mode for enhanced insights and recommendations
                 </p>
               </CardContent>
             </Card>
@@ -504,13 +553,13 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
         </TabsContent>
 
         <TabsContent value="optimization" className="space-y-4">
-          {result && result.optimizations.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {result ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <Target className="w-5 h-5" />
-                    <span>最適化機会</span>
+                    <span>Optimization Opportunities</span>
                     <Badge variant="outline">{result.optimizations.length}</Badge>
                   </CardTitle>
                 </CardHeader>
@@ -524,11 +573,11 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                         </div>
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
-                            <span>現在</span>
+                            <span>Current</span>
                             <span>{optimization.current}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>潜在</span>
+                            <span>Potential</span>
                             <span className="text-green-600">{optimization.potential}</span>
                           </div>
                         </div>
@@ -543,7 +592,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">最適化影響予測</CardTitle>
+                  <CardTitle className="text-lg">Optimization Impact Forecast</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -551,7 +600,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                       <div className="text-2xl font-bold text-green-600">
                         +{result.optimizations.reduce((sum, opt) => sum + opt.improvement, 0).toFixed(1)}%
                       </div>
-                      <p className="text-sm text-muted-foreground">潜在的整体改善率</p>
+                      <p className="text-sm text-muted-foreground">Potential overall improvement rate</p>
                     </div>
 
                     <div className="space-y-2">
@@ -568,7 +617,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
                     <div className="pt-4 border-t">
                       <p className="text-sm text-muted-foreground">
-                        最適化により、年間約{(result.totalCredits * 0.12).toFixed(0)}クレジットの増加が見込まれます
+                        Optimization could yield approximately {(result.totalCredits * 0.12).toFixed(0)} additional credits annually
                       </p>
                     </div>
                   </div>
@@ -580,7 +629,10 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
               <CardContent className="text-center py-8">
                 <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">
-                  詳細な最適化提案はAIモードで利用可能です
+                  Please run calculation to see optimization results
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Enable AI mode for detailed optimization suggestions
                 </p>
               </CardContent>
             </Card>
@@ -589,12 +641,12 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
         <TabsContent value="prediction" className="space-y-4">
           {predictionData ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center space-x-2">
                     <Activity className="w-5 h-5" />
-                    <span>将来予測</span>
+                    <span>Future Prediction</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -602,12 +654,12 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                     <div className="text-3xl font-bold text-blue-600">
                       {predictionData.predictedCredits.toFixed(0)}
                     </div>
-                    <p className="text-sm text-muted-foreground">予測クレジット生成量</p>
+                    <p className="text-sm text-muted-foreground">Predicted credit generation</p>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>予測信頼度</span>
+                      <span>Prediction Confidence</span>
                       <span className={getConfidenceColor(predictionData.confidence)}>
                         {(predictionData.confidence * 100).toFixed(1)}%
                       </span>
@@ -616,7 +668,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                   </div>
 
                   <div>
-                    <Label className="text-sm">影響要因</Label>
+                    <Label className="text-sm">Impact Factors</Label>
                     <div className="mt-2 space-y-2">
                       {predictionData.factors.map((factor: any, index: number) => (
                         <div key={index} className="flex items-center justify-between">
@@ -627,7 +679,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                               variant={factor.impact === 'positive' ? 'default' : factor.impact === 'negative' ? 'destructive' : 'secondary'}
                               className="text-xs"
                             >
-                              {factor.impact}
+                              {getImpactText(factor.impact)}
                             </Badge>
                           </div>
                         </div>
@@ -639,7 +691,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">予測分析</CardTitle>
+                  <CardTitle className="text-lg">Prediction Analysis</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -648,34 +700,34 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
                         <div className="text-xl font-semibold text-green-600">
                           +{(predictionData.predictedCredits * 0.08).toFixed(0)}
                         </div>
-                        <p className="text-xs text-muted-foreground">予測増加量</p>
+                        <p className="text-xs text-muted-foreground">Predicted increase</p>
                       </div>
                       <div>
                         <div className="text-xl font-semibold text-blue-600">
                           +8.2%
                         </div>
-                        <p className="text-xs text-muted-foreground">成長率</p>
+                        <p className="text-xs text-muted-foreground">Growth rate</p>
                       </div>
                     </div>
 
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span>設備投資の効果が期待できる</span>
+                        <span>Equipment investment effects expected</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span>サプライヤー品質の改善傾向</span>
+                        <span>Supplier quality improvement trend</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <AlertTriangle className="w-4 h-4 text-yellow-500" />
-                        <span>季節変動による変動に注意</span>
+                        <span>Watch for seasonal fluctuations</span>
                       </div>
                     </div>
 
                     <div className="pt-4 border-t">
                       <p className="text-xs text-muted-foreground">
-                        予測は過去データとAI分析に基づいています。実際の結果は異なる場合があります。
+                        Predictions are based on historical data and AI analysis. Actual results may vary.
                       </p>
                     </div>
                   </div>
@@ -687,7 +739,7 @@ export default function AICreditCalculator({ initialData }: AICreditCalculatorPr
               <CardContent className="text-center py-8">
                 <Activity className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">
-                  予測データは計算完了後に表示されます
+                  Prediction data will be displayed after calculation completes
                 </p>
               </CardContent>
             </Card>

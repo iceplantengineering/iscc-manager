@@ -179,66 +179,70 @@ export class AIEnhancedCreditCalculator {
 
   private async performAIAnalysis(data: CreditInputData, baseResult: CreditCalculationResult) {
     const analysisPrompt = `
-あなたはISCC+クレジット計算の専門家です。以下のデータに基づいて、クレジット計算の詳細分析を行ってください。
+You are an ISCC+ credit calculation expert. Please perform detailed analysis of credit calculations based on the following data.
 
-入力データ：
-- AN投入量: ${data.anInput} kg
-- PAN生産量: ${data.panProduction} kg
-- CF生産量: ${data.cfProduction} kg
-- PAN出荷: ${data.panShipments.length}件、合計${data.panShipments.reduce((sum, s) => sum + s.quantity, 0)} kg
-- CF出荷: ${data.cfShipments.length}件、合計${data.cfShipments.reduce((sum, s) => sum + s.quantity, 0)} kg
+Input Data:
+- AN Input: ${data.anInput} kg
+- PAN Production: ${data.panProduction} kg
+- CF Production: ${data.cfProduction} kg
+- PAN Shipments: ${data.panShipments.length} items, total ${data.panShipments.reduce((sum, s) => sum + s.quantity, 0)} kg
+- CF Shipments: ${data.cfShipments.length} items, total ${data.cfShipments.reduce((sum, s) => sum + s.quantity, 0)} kg
 
-計算結果：
-- ANクレジット: ${baseResult.anCredits.toFixed(2)}
-- PANクレジット: ${baseResult.panCredits.toFixed(2)}
-- CFクレジット: ${baseResult.cfCredits.toFixed(2)}
-- 総クレジット: ${baseResult.totalCredits.toFixed(2)}
+Calculation Results:
+- AN Credits: ${baseResult.anCredits.toFixed(2)}
+- PAN Credits: ${baseResult.panCredits.toFixed(2)}
+- CF Credits: ${baseResult.cfCredits.toFixed(2)}
+- Total Credits: ${baseResult.totalCredits.toFixed(2)}
 
-サプライヤーデータ：
-${data.supplierData.map(s => `- ${s.name}: BM% ${s.bmPercentage}%, 信頼性 ${s.reliability}%`).join('\n')}
+Supplier Data:
+${data.supplierData.map(s => `- ${s.name}: BM% ${s.bmPercentage}%, Reliability ${s.reliability}%`).join('\n')}
 
-プラントデータ：
-${data.plantData.map(p => `- ${p.name}: 効率 ${p.efficiency}%, 変換率 ${p.conversionRate}`).join('\n')}
+Plant Data:
+${data.plantData.map(p => `- ${p.name}: Efficiency ${p.efficiency}%, Conversion Rate ${p.conversionRate}`).join('\n')}
 
-分析してください：
-1. 計算の正確性評価
-2. 潜在的な異常や問題点
-3. 最適化機会の特定
-4. 具体的な改善推奨事項
+Please analyze:
+1. Calculation accuracy evaluation
+2. Potential anomalies and issues
+3. Optimization opportunities identification
+4. Specific improvement recommendations
 
-JSON形式で回答してください：
+Please respond in JSON format:
 {
   "anomalies": [
     {
       "type": "calculation|data_quality|compliance|efficiency",
       "severity": "high|medium|low",
-      "description": "異常の説明",
-      "recommendation": "推奨事項"
+      "description": "Anomaly description",
+      "recommendation": "Recommendation"
     }
   ],
   "optimizations": [
     {
-      "area": "対象領域",
-      "current": "現在値",
-      "potential": "潜在的改善値",
-      "improvement": "改善率",
-      "action": "具体的なアクション"
+      "area": "Target area",
+      "current": "Current value",
+      "potential": "Potential improvement value",
+      "improvement": "Improvement rate",
+      "action": "Specific action"
     }
   ],
   "insights": {
-    "summary": "分析サマリー",
-    "keyFindings": ["主要な発見1", "主要な発見2"],
-    "recommendations": ["推奨事項1", "推奨事項2"]
+    "summary": "Analysis summary",
+    "keyFindings": ["Key finding 1", "Key finding 2"],
+    "recommendations": ["Recommendation 1", "Recommendation 2"]
   },
   "confidence": 0.95
 }`;
 
+    // Get the first available provider instead of hardcoded 'openai'
+    const availableProviders = llmService.getAvailableProviders();
+    const provider = availableProviders.length > 0 ? availableProviders[0].id : 'deepseek';
+
     const request: LLMRequest = {
-      provider: 'openai',
+      provider,
       prompt: analysisPrompt,
       maxTokens: 2000,
       temperature: 0.3,
-      systemPrompt: 'あなたはISCC+クレジット計算の専門家として、正確で詳細な分析を提供してください。常にJSON形式で回答してください。',
+      systemPrompt: 'You are an ISCC+ credit calculation expert, please provide accurate and detailed analysis. Always respond in JSON format.',
     };
 
     const response = await llmService.generateResponse(request);
@@ -262,22 +266,22 @@ JSON形式で回答してください：
       additionalAnomalies: [],
       optimizations: [
         {
-          area: '変換効率',
+          area: 'Conversion Efficiency',
           current: '82%',
           potential: '85%',
           improvement: 3,
-          action: 'プロセスパラメータの最適化による変換効率の向上'
+          action: 'Improvement of conversion efficiency through process parameter optimization'
         }
       ],
       insights: {
-        summary: 'クレジット計算は正常に実行されました。継続的な監視が推奨されます。',
+        summary: 'Credit calculation has been executed successfully. Continuous monitoring is recommended.',
         keyFindings: [
-          'クレジット生成は安定しています',
-          'サプライヤーのパフォーマンスは良好です'
+          'Credit generation is stable',
+          'Supplier performance is good'
         ],
         recommendations: [
-          '月次での詳細なレビューを実施してください',
-          '変換効率の改善を検討してください'
+          'Please conduct detailed monthly reviews',
+          'Consider improving conversion efficiency'
         ]
       },
       confidence: 0.8,
@@ -298,8 +302,8 @@ JSON形式で回答してください：
       anomalies.push({
         type: 'efficiency',
         severity: 'high',
-        description: 'ANからPANへの変換効率が低いです',
-        recommendation: '製造プロセスの見直しと機器の点検を推奨します'
+        description: 'AN to PAN conversion efficiency is low',
+        recommendation: 'Recommend reviewing manufacturing process and inspecting equipment'
       });
     }
 
@@ -308,8 +312,8 @@ JSON形式で回答してください：
       anomalies.push({
         type: 'data_quality',
         severity: 'medium',
-        description: `${lowReliabilitySuppliers.length}件のサプライヤーで信頼性が80%未満です`,
-        recommendation: 'サプライヤーとの品質改善協議を開始してください'
+        description: `${lowReliabilitySuppliers.length} suppliers have reliability below 80%`,
+        recommendation: 'Please start quality improvement discussions with suppliers'
       });
     }
 
@@ -317,8 +321,8 @@ JSON形式で回答してください：
       anomalies.push({
         type: 'calculation',
         severity: 'medium',
-        description: '総クレジット生成量が期待値を下回っています',
-        recommendation: 'BM%の確認と計算ロジックの検証が必要です'
+        description: 'Total credit generation is below expected value',
+        recommendation: 'BM% verification and calculation logic validation is required'
       });
     }
 
@@ -331,22 +335,22 @@ JSON形式で回答してください：
     const currentEfficiency = results.panCredits / data.anInput;
     if (currentEfficiency < 0.85) {
       optimizations.push({
-        area: '変換効率',
+        area: 'Conversion Efficiency',
         current: `${(currentEfficiency * 100).toFixed(1)}%`,
         potential: '85%',
         improvement: 85 - (currentEfficiency * 100),
-        action: '触媒の最適化と温度管理の改善'
+        action: 'Catalyst optimization and temperature management improvement'
       });
     }
 
     const avgSupplierBM = data.supplierData.reduce((sum, s) => sum + s.bmPercentage, 0) / data.supplierData.length;
     if (avgSupplierBM < 90) {
       optimizations.push({
-        area: 'サプライヤーBM%',
+        area: 'Supplier BM%',
         current: `${avgSupplierBM.toFixed(1)}%`,
         potential: '95%',
         improvement: 95 - avgSupplierBM,
-        action: '高BM%サプライヤーの開拓と既存サプライヤーとの協力'
+        action: 'Development of high BM% suppliers and cooperation with existing suppliers'
       });
     }
 
@@ -386,28 +390,31 @@ JSON形式で回答してください：
     const predictedCredits = avgANInput * avgEfficiency * 0.90;
 
     const predictionPrompt = `
-以下の履歴データに基づいて、今後のクレジット生成を予測してください。
+Based on the following historical data, please predict future credit generation.
 
-履歴データ：
+Historical Data:
 ${historicalData.slice(-3).map(d => `
-期間: ${d.timePeriod.start} ~ ${d.timePeriod.end}
-AN投入: ${d.anInput} kg
-PAN生産: ${d.panProduction} kg
-効率: ${((d.panProduction / d.anInput) * 100).toFixed(1)}%
+Period: ${d.timePeriod.start} ~ ${d.timePeriod.end}
+AN Input: ${d.anInput} kg
+PAN Production: ${d.panProduction} kg
+Efficiency: ${((d.panProduction / d.anInput) * 100).toFixed(1)}%
 `).join('')}
 
-予測期間: ${futurePeriod.start} ~ ${futurePeriod.end}
+Prediction Period: ${futurePeriod.start} ~ ${futurePeriod.end}
 
-要因分析：
-- 季節性パターン
-- サプライヤー状況
-- 設備稼働率
-- 市場需要
+Factor Analysis:
+- Seasonal patterns
+- Supplier conditions
+- Equipment operation rate
+- Market demand
 
-JSON形式で予測結果を提供してください。`;
+Please provide prediction results in JSON format.`;
+
+    const availableProviders = llmService.getAvailableProviders();
+    const provider = availableProviders.length > 0 ? availableProviders[0].id : 'deepseek';
 
     const request: LLMRequest = {
-      provider: 'openai',
+      provider,
       prompt: predictionPrompt,
       maxTokens: 1000,
       temperature: 0.3,
@@ -432,10 +439,10 @@ JSON形式で予測結果を提供してください。`;
         predictedCredits,
         confidence: 0.7,
         factors: [
-          { factor: '設備稼働率', impact: 'positive', weight: 0.3 },
-          { factor: 'サプライヤー品質', impact: 'positive', weight: 0.25 },
-          { factor: '季節変動', impact: 'neutral', weight: 0.2 },
-          { factor: '技術改善', impact: 'positive', weight: 0.25 }
+          { factor: 'Equipment Operation Rate', impact: 'positive', weight: 0.3 },
+          { factor: 'Supplier Quality', impact: 'positive', weight: 0.25 },
+          { factor: 'Seasonal Fluctuations', impact: 'neutral', weight: 0.2 },
+          { factor: 'Technical Improvements', impact: 'positive', weight: 0.25 }
         ],
       };
     }

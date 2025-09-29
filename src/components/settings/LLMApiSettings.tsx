@@ -165,7 +165,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
         ...prev,
         [providerId]: {
           success: false,
-          message: `接続テストに失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`
+          message: `Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`
         }
       }));
     } finally {
@@ -188,7 +188,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
     }
 
     if (!deepseekProvider || !deepseekProvider.apiKey) {
-      alert('Deepseek APIキーを入力してください');
+      alert('Please enter Deepseek API key');
       return;
     }
 
@@ -204,7 +204,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
       enabled: p.id === 'deepseek'
     }));
     saveProviders(resetProviders);
-    alert('Deepseekプロバイダーをリセットし、有効にしました。');
+    alert('Deepseek provider has been reset and enabled.');
   };
 
   const resetToDefaults = () => {
@@ -218,25 +218,25 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">LLM API 設定</h2>
+          <h2 className="text-2xl font-bold">LLM API Settings</h2>
           <p className="text-muted-foreground">
-            ChatGPT、Claude、Z AI、DeepseekなどのAIモデルを設定
+            Configure AI models like ChatGPT, Claude, Z AI, Deepseek, and more
           </p>
         </div>
         <Button variant="outline" onClick={resetToDefaults}>
           <Trash2 className="w-4 h-4 mr-2" />
-          デフォルトに戻す
+          Reset to Defaults
         </Button>
       </div>
 
       <Tabs defaultValue="providers" className="w-full">
         <TabsList>
-          <TabsTrigger value="providers">プロバイダー設定</TabsTrigger>
-          <TabsTrigger value="debug">デバッグ</TabsTrigger>
-          <TabsTrigger value="global">全体設定</TabsTrigger>
+          <TabsTrigger value="providers">Provider Settings</TabsTrigger>
+          <TabsTrigger value="debug">Debug</TabsTrigger>
+          <TabsTrigger value="global">Global Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="providers" className="space-y-4">
@@ -248,7 +248,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                     <Globe className="w-5 h-5" />
                     <CardTitle className="text-lg">{provider.name}</CardTitle>
                     <Badge variant={provider.enabled ? "default" : "secondary"}>
-                      {provider.enabled ? "有効" : "無効"}
+                      {provider.enabled ? "Enabled" : "Disabled"}
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -263,7 +263,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                       disabled={testingProvider === provider.id || !provider.apiKey}
                     >
                       <TestTube className="w-4 h-4 mr-2" />
-                      {testingProvider === provider.id ? 'テスト中...' : '接続テスト'}
+                      {testingProvider === provider.id ? 'Testing...' : 'Test Connection'}
                     </Button>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor={`model-${provider.id}`}>モデル</Label>
+                    <Label htmlFor={`model-${provider.id}`}>Model</Label>
                     <Select
                       value={provider.model}
                       onValueChange={(value) => updateProvider(provider.id, { model: value })}
@@ -333,7 +333,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor={`max-tokens-${provider.id}`}>最大トークン数</Label>
+                    <Label htmlFor={`max-tokens-${provider.id}`}>Max Tokens</Label>
                     <Input
                       id={`max-tokens-${provider.id}`}
                       type="number"
@@ -358,7 +358,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
 
                 {provider.costPer1kTokens && (
                   <div className="text-sm text-muted-foreground">
-                    コスト: ${provider.costPer1kTokens.input}/1k input tokens, ${provider.costPer1kTokens.output}/1k output tokens
+                    Cost: ${provider.costPer1kTokens.input}/1k input tokens, ${provider.costPer1kTokens.output}/1k output tokens
                   </div>
                 )}
               </CardContent>
@@ -371,10 +371,10 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
             <CardHeader>
               <CardTitle className="text-lg flex items-center space-x-2">
                 <Bug className="w-5 h-5" />
-                <span>Deepseek API デバッグ</span>
+                <span>Deepseek API Debug</span>
               </CardTitle>
               <CardDescription>
-                Deepseek APIの接続問題をデバッグします
+                Debug Deepseek API connection issues
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -384,29 +384,29 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                   checked={debugMode}
                   onCheckedChange={setDebugMode}
                 />
-                <Label htmlFor="debug-mode">デバッグモードを有効にする</Label>
+                <Label htmlFor="debug-mode">Enable Debug Mode</Label>
               </div>
 
               <div className="space-y-2">
                 <Button onClick={runDeepseekDebug} className="w-full">
                   <Play className="w-4 h-4 mr-2" />
-                  Deepseek API デバッグテスト
+                  Deepseek API Debug Test
                 </Button>
                 <Button onClick={resetAndEnableDeepseek} variant="outline" className="w-full">
                   <Settings className="w-4 h-4 mr-2" />
-                  Deepseekプロバイダーをリセット
+                  Reset Deepseek Provider
                 </Button>
               </div>
 
               {debugResults && (
                 <div className="space-y-2">
-                  <Label>デバッグ結果:</Label>
+                  <Label>Debug Results:</Label>
                   <Alert className={debugResults.success ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}>
                     <AlertDescription className={debugResults.success ? "text-green-700" : "text-red-700"}>
                       <div className="font-medium">{debugResults.message}</div>
                       {debugResults.details && (
                         <details className="mt-2">
-                          <summary className="cursor-pointer text-sm">詳細情報</summary>
+                          <summary className="cursor-pointer text-sm">Detailed Information</summary>
                           <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
                             {JSON.stringify(debugResults.details, null, 2)}
                           </pre>
@@ -418,12 +418,12 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
               )}
 
               <div className="text-sm text-muted-foreground">
-                <p>💡 デバッグヒント:</p>
+                <p>💡 Debug Tips:</p>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
-                  <li>CORSエラーが発生する場合、サーバーサイドプロキシが必要です</li>
-                  <li>APIキーの形式を確認してください（通常は "sk-" で始まります）</li>
-                  <li>ネットワーク接続とファイアウォールを確認してください</li>
-                  <li>DeepseekのAPIエンドポイントが変更されている可能性があります</li>
+                  <li>If CORS errors occur, a server-side proxy is needed</li>
+                  <li>Check API key format (usually starts with "sk-")</li>
+                  <li>Verify network connection and firewall settings</li>
+                  <li>Deepseek API endpoint may have changed</li>
                 </ul>
               </div>
             </CardContent>
@@ -433,15 +433,15 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
         <TabsContent value="global" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>グローバル設定</CardTitle>
+              <CardTitle>Global Settings</CardTitle>
               <CardDescription>
-                LLM連携に関する全体的な設定
+                Overall LLM integration settings
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="request-timeout">リクエストタイムアウト (秒)</Label>
+                  <Label htmlFor="request-timeout">Request Timeout (seconds)</Label>
                   <Input
                     id="request-timeout"
                     type="number"
@@ -451,7 +451,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="retry-attempts">リトライ回数</Label>
+                  <Label htmlFor="retry-attempts">Retry Attempts</Label>
                   <Input
                     id="retry-attempts"
                     type="number"
@@ -463,12 +463,12 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
 
               <div className="flex items-center space-x-2">
                 <Switch id="cost-tracking" defaultChecked />
-                <Label htmlFor="cost-tracking">コスト追跡を有効にする</Label>
+                <Label htmlFor="cost-tracking">Enable Cost Tracking</Label>
               </div>
 
               <div className="flex items-center space-x-2">
                 <Switch id="usage-analytics" defaultChecked />
-                <Label htmlFor="usage-analytics">使用状況分析を有効にする</Label>
+                <Label htmlFor="usage-analytics">Enable Usage Analytics</Label>
               </div>
             </CardContent>
           </Card>
@@ -478,7 +478,7 @@ export default function LLMApiSettings({ onSave }: LLMApiSettingsProps) {
       <div className="flex justify-end">
         <Button onClick={() => onSave?.(providers)}>
           <Save className="w-4 h-4 mr-2" />
-          設定を保存
+          Save Settings
         </Button>
       </div>
     </div>

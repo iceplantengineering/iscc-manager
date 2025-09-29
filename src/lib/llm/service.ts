@@ -5,7 +5,7 @@ export class LLMService {
 
   constructor(providers: LLMProvider[] = []) {
     this.providers = providers;
-    // プロバイダーが空の場合、デフォルト設定を読み込む
+    // If providers is empty, load default settings
     if (this.providers.length === 0) {
       this.loadProvidersFromStorage();
     }
@@ -18,7 +18,7 @@ export class LLMService {
         this.providers = JSON.parse(saved);
         console.log('Loaded providers from storage:', this.providers);
       } else {
-        // デフォルトプロバイダーを設定
+        // Set default providers
         this.providers = DEFAULT_PROVIDERS.map(p => ({
           ...p,
           apiKey: p.id === 'deepseek' ? 'sk-4e01224ca2884cb5bfc77fd109900062' :
@@ -30,7 +30,7 @@ export class LLMService {
       }
     } catch (error) {
       console.error('Failed to load providers:', error);
-      // フォールバック：最低でもDeepseekとZ AIプロバイダーを設定
+      // Fallback: At least set Deepseek and Z AI providers
       this.providers = [
         {
           id: 'deepseek',
@@ -58,7 +58,7 @@ export class LLMService {
     }
   }
 
-  // プロバイダーを再読み込みするメソッド
+  // Method to reload providers
   reloadProviders() {
     this.loadProvidersFromStorage();
   }
@@ -275,12 +275,12 @@ export class LLMService {
 
       return {
         success: true,
-        message: `接続成功！ レスポンス: "${response.content.substring(0, 100)}..." (${response.tokensUsed.input + response.tokensUsed.output} tokens used)`
+        message: `Connection successful! Response: "${response.content.substring(0, 100)}..." (${response.tokensUsed.input + response.tokensUsed.output} tokens used)`
       };
     } catch (error) {
       return {
         success: false,
-        message: `接続失敗: ${error instanceof Error ? error.message : 'Unknown error'}`
+        message: `Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       };
     }
   }
@@ -295,7 +295,7 @@ export class LLMService {
   }
 }
 
-// プロバイダーを設定してからサービスを初期化
+// Initialize service after setting providers
 const getStoredProviders = () => {
   try {
     const saved = localStorage.getItem('llm-providers');
@@ -306,7 +306,7 @@ const getStoredProviders = () => {
     console.error('Failed to load providers from storage:', error);
   }
 
-  // デフォルトプロバイダーを返す
+  // Return default providers
   return DEFAULT_PROVIDERS.map(p => ({
     ...p,
     apiKey: p.id === 'deepseek' ? 'sk-4e01224ca2884cb5bfc77fd109900062' :

@@ -117,7 +117,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
   const generateReport = async () => {
     if (!selectedType || !selectedProvider) {
-      setError('レポートタイプとプロバイダーを選択してください');
+      setError('Please select report type and provider');
       return;
     }
 
@@ -145,10 +145,10 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
       setProgress(100);
       setGeneratedReport(report);
-      setSuccess('レポート生成が完了しました');
+      setSuccess('Report generation completed successfully');
       setTimeout(() => setSuccess(''), 5000); // 5秒後に成功メッセージを消す
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'レポート生成に失敗しました');
+      setError(err instanceof Error ? err.message : 'Report generation failed');
       setTimeout(() => setError(''), 5000); // 5秒後にエラーメッセージを消す
     } finally {
       setIsGenerating(false);
@@ -217,11 +217,11 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
         newWindow.document.close();
       }
 
-      setSuccess('レポートをHTML形式でダウンロードしました');
+      setSuccess('Report downloaded in HTML format');
       setTimeout(() => setSuccess(''), 5000); // 5秒後に成功メッセージを消す
     } catch (error) {
-      console.error('レポート生成エラー:', error);
-      setError('レポートの生成に失敗しました');
+      console.error('Report generation error:', error);
+      setError('Report generation failed');
       setTimeout(() => setError(''), 5000); // 5秒後にエラーメッセージを消す
     }
   };
@@ -253,14 +253,14 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
     <div class="header">
         <div class="title">${report.title}</div>
         <div class="meta">
-            生成日時: ${new Date(report.metadata.generatedAt).toLocaleString('ja')}<br>
-            使用モデル: ${report.metadata.provider} - ${report.metadata.model}<br>
-            使用トークン: ${report.metadata.tokensUsed}
+            Generated: ${new Date(report.metadata.generatedAt).toLocaleString('en')}<br>
+            Model Used: ${report.metadata.provider} - ${report.metadata.model}<br>
+            Tokens Used: ${report.metadata.tokensUsed}
         </div>
     </div>
 
     <div class="summary">
-        <h3>要約</h3>
+        <h3>Summary</h3>
         <p>${report.summary.replace(/\n/g, '<br>')}</p>
     </div>
 
@@ -273,7 +273,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
     ${report.recommendations ? `
     <div class="recommendations">
-        <h3>推奨事項</h3>
+        <h3>Recommendations</h3>
         <ol>
             ${report.recommendations.map((rec: string) => `<li>${rec}</li>`).join('')}
         </ol>
@@ -290,12 +290,12 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
   const selectedReportType = reportTypes.find(t => t.id === selectedType);
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">AIレポート生成</h2>
+          <h2 className="text-2xl font-bold">AI Report Generator</h2>
           <p className="text-muted-foreground">
-            AIによる高度な分析とレポート自動生成
+            Advanced AI-powered analysis and automated report generation
           </p>
         </div>
         <Badge variant="outline" className="flex items-center space-x-1">
@@ -322,24 +322,24 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
       <Tabs defaultValue="generate" className="w-full">
         <TabsList>
-          <TabsTrigger value="generate">レポート生成</TabsTrigger>
-          <TabsTrigger value="history">生成履歴</TabsTrigger>
-          <TabsTrigger value="settings">設定</TabsTrigger>
+          <TabsTrigger value="generate">Generate Report</TabsTrigger>
+          <TabsTrigger value="history">Generation History</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="generate" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">レポート設定</CardTitle>
-                <CardDescription>生成するレポートの種類と設定</CardDescription>
+                <CardTitle className="text-lg">Report Settings</CardTitle>
+                <CardDescription>Configure report type and generation settings</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>レポートタイプ</Label>
+                  <Label>Report Type</Label>
                   <Select value={selectedType} onValueChange={setSelectedType}>
                     <SelectTrigger>
-                      <SelectValue placeholder="レポートタイプを選択" />
+                      <SelectValue placeholder="Select report type" />
                     </SelectTrigger>
                     <SelectContent>
                       {reportTypes.map(type => (
@@ -357,10 +357,10 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                 </div>
 
                 <div className="space-y-2">
-                  <Label>LLMプロバイダー</Label>
+                  <Label>LLM Provider</Label>
                   <Select value={selectedProvider} onValueChange={setSelectedProvider}>
                     <SelectTrigger>
-                      <SelectValue placeholder="プロバイダーを選択" />
+                      <SelectValue placeholder="Select provider" />
                     </SelectTrigger>
                     <SelectContent>
                       {providers.map(provider => (
@@ -373,13 +373,13 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                 </div>
 
                 <div className="space-y-2">
-                  <Label>言語</Label>
+                  <Label>Language</Label>
                   <Select value={language} onValueChange={(value: 'ja' | 'en') => setLanguage(value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ja">日本語</SelectItem>
+                      <SelectItem value="ja">Japanese</SelectItem>
                       <SelectItem value="en">English</SelectItem>
                     </SelectContent>
                   </Select>
@@ -391,7 +391,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                     checked={includeRecommendations}
                     onCheckedChange={setIncludeRecommendations}
                   />
-                  <Label htmlFor="recommendations">改善推奨事項を含める</Label>
+                  <Label htmlFor="recommendations">Include improvement recommendations</Label>
                 </div>
 
                 <Button
@@ -402,12 +402,12 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                   {isGenerating ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      生成中...
+                      Generating...
                     </>
                   ) : (
                     <>
                       <Brain className="w-4 h-4 mr-2" />
-                      レポート生成
+                      Generate Report
                     </>
                   )}
                 </Button>
@@ -416,22 +416,22 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle className="text-lg">生成状況</CardTitle>
+                <CardTitle className="text-lg">Generation Status</CardTitle>
                 <CardDescription>
-                  {isGenerating ? 'AIがレポートを生成しています...' : '生成結果'}
+                  {isGenerating ? 'AI is generating report...' : 'Generation Results'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {isGenerating ? (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">進捗</span>
+                      <span className="text-sm font-medium">Progress</span>
                       <span className="text-sm text-muted-foreground">{progress}%</span>
                     </div>
                     <Progress value={progress} className="w-full" />
                     <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                       <Clock className="w-4 h-4" />
-                      <span>通常30〜60秒かかります</span>
+                      <span>Usually takes 30-60 seconds</span>
                     </div>
                   </div>
                 ) : generatedReport ? (
@@ -454,7 +454,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                     </div>
 
                     <div className="space-y-2">
-                      <Label>セクション ({generatedReport.sections.length})</Label>
+                      <Label>Sections ({generatedReport.sections.length})</Label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {generatedReport.sections.map((section, index) => (
                           <div key={index} className="p-2 border rounded">
@@ -469,7 +469,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
 
                     {generatedReport.recommendations && (
                       <div className="space-y-2">
-                        <Label>改善推奨事項 ({generatedReport.recommendations.length})</Label>
+                        <Label>Recommendations ({generatedReport.recommendations.length})</Label>
                         <div className="space-y-1">
                           {generatedReport.recommendations.slice(0, 3).map((rec, index) => (
                             <div key={index} className="flex items-start space-x-2 text-sm">
@@ -486,23 +486,23 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                         <DialogTrigger asChild>
                           <Button variant="outline" className="flex-1">
                             <Eye className="w-4 h-4 mr-2" />
-                            詳細表示
+                            View Details
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle>{generatedReport?.title}</DialogTitle>
                             <DialogDescription>
-                              生成日時: {generatedReport?.metadata.generatedAt.toLocaleString('ja')}
+                              Generated: {generatedReport?.metadata.generatedAt.toLocaleString('en')}
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-6">
                             <div>
-                              <h3 className="text-lg font-semibold mb-2">要約</h3>
+                              <h3 className="text-lg font-semibold mb-2">Summary</h3>
                               <p className="text-sm whitespace-pre-wrap">{generatedReport?.summary}</p>
                             </div>
                             <div>
-                              <h3 className="text-lg font-semibold mb-4">詳細セクション</h3>
+                              <h3 className="text-lg font-semibold mb-4">Detailed Sections</h3>
                               {generatedReport?.sections.map((section, index) => (
                                 <div key={index} className="mb-6">
                                   <h4 className="text-md font-medium mb-2">{section.title}</h4>
@@ -512,7 +512,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                             </div>
                             {generatedReport?.recommendations && (
                               <div>
-                                <h3 className="text-lg font-semibold mb-3">改善推奨事項</h3>
+                                <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
                                 <ol className="list-decimal list-inside space-y-2">
                                   {generatedReport.recommendations.map((rec, index) => (
                                     <li key={index} className="text-sm">{rec}</li>
@@ -521,8 +521,8 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                               </div>
                             )}
                             <div className="text-xs text-muted-foreground border-t pt-4">
-                              <p>使用モデル: {generatedReport?.metadata.provider} - {generatedReport?.metadata.model}</p>
-                              <p>使用トークン: {generatedReport?.metadata.tokensUsed}</p>
+                              <p>Model Used: {generatedReport?.metadata.provider} - {generatedReport?.metadata.model}</p>
+                              <p>Tokens Used: {generatedReport?.metadata.tokensUsed}</p>
                               <p>コスト: ${generatedReport?.metadata.cost?.toFixed(4)}</p>
                             </div>
                           </div>
@@ -530,7 +530,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                       </Dialog>
                       <Button onClick={downloadPDF} className="flex-1">
                         <Download className="w-4 h-4 mr-2" />
-                        HTMLダウンロード
+                        Download HTML
                       </Button>
                     </div>
                   </div>
@@ -538,7 +538,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                   <div className="text-center py-8">
                     <BarChart3 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted-foreground">
-                      レポートを生成すると、ここに結果が表示されます
+                      Generate a report to see results here
                     </p>
                   </div>
                 )}
@@ -550,12 +550,12 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
         <TabsContent value="history" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>生成履歴</CardTitle>
-              <CardDescription>過去に生成したレポートの履歴</CardDescription>
+              <CardTitle>Generation History</CardTitle>
+              <CardDescription>History of previously generated reports</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground text-center py-8">
-                生成履歴はまだありません
+                No generation history yet
               </p>
             </CardContent>
           </Card>
@@ -564,31 +564,31 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
         <TabsContent value="settings" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>レポート設定</CardTitle>
-              <CardDescription>レポート生成に関する詳細設定</CardDescription>
+              <CardTitle>Report Settings</CardTitle>
+              <CardDescription>Detailed settings for report generation</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="default-language">デフォルト言語</Label>
+                  <Label htmlFor="default-language">Default Language</Label>
                   <Select defaultValue="ja">
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ja">日本語</SelectItem>
+                      <SelectItem value="ja">Japanese</SelectItem>
                       <SelectItem value="en">English</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="auto-save">自動保存</Label>
+                  <Label htmlFor="auto-save">Auto Save</Label>
                   <Switch id="auto-save" defaultChecked />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="max-tokens">最大トークン数</Label>
+                  <Label htmlFor="max-tokens">Max Tokens</Label>
                   <Input
                     id="max-tokens"
                     type="number"
@@ -598,7 +598,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="temperature">創造性レベル</Label>
+                  <Label htmlFor="temperature">Creativity Level</Label>
                   <Input
                     id="temperature"
                     type="range"
