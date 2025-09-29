@@ -283,3 +283,170 @@ For support and questions:
 ---
 
 Built with ❤️ for sustainable production management
+
+## 📝 Development History
+
+### Phase 1: IMBL System Implementation (Immutable Mass Balance Ledger)
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Complete TypeScript types for mass balance ledger system
+  - ImmutableMassBalanceLedger service class with hash-based event chaining
+  - CertificateGenerator component with practical UI for certificate creation
+  - MassBalanceDashboard for real-time mass balance monitoring
+  - Integration with existing ISCC+ Production Manager architecture
+  - Navigation and routing updates for new IMBL features
+
+### Phase 2: ISA-95 Integration Layer
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Comprehensive ISA-95 automation pyramid types (Levels 1-4)
+  - Equipment hierarchy management (Enterprise → Site → Area → Work Center → Work Unit)
+  - Material transformation tracking with yield calculations
+  - Data contract validation across system layers
+  - IntegrationDashboard for monitoring system integration status
+  - Real-time equipment performance monitoring
+
+### Phase 3: IoT Edge Data Collection System
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - EdgeCollectorService for IoT device management
+  - Real-time device monitoring and data collection
+  - Device buffering and compression optimization
+  - Event logging and alert system
+  - EdgeCollectorDashboard with comprehensive device management UI
+  - Support for multiple device types (sensors, PLCs, meters, scanners)
+
+### Phase 4: Utility Management & Energy Monitoring
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Comprehensive utility consumption tracking (electricity, water, gas, steam)
+  - Real-time energy monitoring with cost analytics
+  - Device-level consumption tracking
+  - Optimization recommendations and savings calculations
+  - Carbon footprint correlation with utility usage
+  - Interactive charts and trend analysis
+
+### Phase 5: Environmental Monitoring & CEMS Integration
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Continuous Emission Monitoring System (CEMS) integration
+  - Real-time emission tracking for CO2, NOx, SOx, particulate matter
+  - Environmental compliance management with regulatory thresholds
+  - Automated reporting for environmental agencies
+  - Emission reduction tracking and sustainability metrics
+  - Environmental event logging and alert system
+
+### Phase 6: Digital Product Passport (DPP)
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Comprehensive product lifecycle transparency
+  - Supply chain traceability and sustainability tracking
+  - Carbon footprint analysis by product
+  - QR code generation for consumer access
+  - Blockchain verification for data integrity
+  - Multi-language support and compliance documentation
+
+### Phase 7: Advanced Analytics & AI Integration
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - AI-powered production optimization recommendations
+  - Predictive maintenance and quality forecasting
+  - Real-time anomaly detection and alerting
+  - Advanced data visualization with interactive dashboards
+  - Machine learning models for trend analysis
+  - Automated insight generation and reporting
+
+### Navigation & UI Improvements
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - Consolidated ISCC+ Certification and IMBL System navigation
+  - Enhanced responsive design across all pages
+  - Fixed responsive width issues for consistency
+  - English translation for all Japanese text elements
+  - Improved accessibility and user experience
+
+### Form Management System
+- **Date**: 2025-01-XX
+- **Features Added**:
+  - ProductionPlanForm for creating/editing production plans
+  - FinishedProductForm for comprehensive product management
+  - Common form components library with validation
+  - Tabbed interfaces for complex data entry
+  - Dynamic field management and real-time validation
+
+### Responsive Design Fixes
+- **Date**: 2025-01-23
+- **Issues Fixed**:
+  - Edge Data Collectors page width inconsistency
+  - Container constraints added for consistent zoom behavior
+  - All pages now use standardized `max-w-7xl mx-auto p-6 space-y-6` pattern
+
+### Technical Achievements
+- **Architecture**: Implemented scalable service-layer architecture with TypeScript
+- **Performance**: Optimized data processing with time-sliced operations
+- **Security**: Hash-based event chaining for data integrity
+- **User Experience**: Responsive design with Shadcn UI components
+- **Integration**: Seamless integration with existing ISCC+ Production Manager
+- **Compliance**: Full ISCC+ mass balance methodology implementation
+
+### Phase 8: AI-Powered Report Generation System
+- **Date**: 2025-01-28
+- **Features Added**:
+  - Multi-LLM API integration (OpenAI, Anthropic, Zhipu AI, Deepseek)
+  - AI-powered report generation with 5 specialized templates:
+    - Credit Audit Reports
+    - Supplier Evaluation Reports
+    - Production Efficiency Reports
+    - Sustainability Progress Reports
+    - Risk Assessment Reports
+  - Bilingual recommendation system (Japanese/English)
+  - Advanced data analysis with calculated metrics and insights
+  - HTML report generation with dynamic AI content integration
+  - LLM provider management with localStorage persistence
+  - Real-time API connection testing and debugging tools
+  - Specialized prompts for each report type with deep insights
+  - Supplier-specific data reflection and strategic analysis
+
+### Technical Implementation Details
+- **LLM Service Layer**: Comprehensive service class with provider-specific API calling
+- **Report Engine**: Sophisticated template system with structured data parsing
+- **Language Support**: Full bilingual support with localized prompts
+- **Data Integration**: Enhanced data reflection with supplier names and metrics
+- **Error Handling**: Robust error handling with fallback mechanisms
+- **Performance**: Optimized API calls with caching and retry logic
+
+### Phase 9: AI Credit Calculator Enhancement
+- **Date**: 2025-01-29
+- **Features Added**:
+  - Complete AI Credit Calculator with real-time AI analysis capabilities
+  - Dynamic LLM provider selection (OpenAI, Anthropic, Zhipu AI, Deepseek)
+  - Automated anomaly detection and optimization recommendations
+  - Future credit prediction with confidence levels
+  - Bilingual support with complete English translation
+  - Responsive layout with consistent UI patterns
+  - Real-time recalculation on input changes with AI mode toggle
+  - Enhanced AI insights display with calculation method indicators
+  - Comprehensive data validation and error handling
+  - Production data confirmation gate before executing calculations
+  - Unified calculation results view combining AI analysis, optimization, and prediction insights
+
+### Technical Improvements Made
+- **AI Integration**: Fixed AI mode functionality with proper LLM provider selection
+- **UI Consistency**: Standardized layout using `max-w-7xl mx-auto p-6 space-y-6` pattern
+- **Performance**: Optimized with useCallback and debounced input handling
+- **User Experience**: Added visual indicators for AI mode status and calculation methods
+- **Internationalization**: Complete English translation of all prompts and UI elements
+- **Architecture**: Enhanced service layer with dynamic provider management
+
+### Issues Resolved
+- **AI Insights Display**: Fixed tab visibility logic to show analysis results in all modes
+- **Input Change Handling**: Implemented automatic recalculation when AI mode is enabled
+- **Provider Configuration**: Dynamic LLM provider selection instead of hardcoded values
+- **Layout Consistency**: Applied responsive design standards across all calculator components
+- **Language Translation**: Complete English localization with proper terminology
+
+### Current Status
+- **Branch**: `feature/continued-development`
+- **Deployment**: Local development server running on http://localhost:8080
+- **Features**: AI Credit Calculator fully functional with AI mode, real-time analysis, and optimization insights
+- **Next Steps**: Production testing and user feedback collection for AI-powered features

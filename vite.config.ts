@@ -210,6 +210,24 @@ export default defineConfig(({ mode }) => {
     server: {
       host: "::",
       port: 8080,
+      proxy: {
+        // LLM API requests proxy
+        '/api/llm': {
+          target: 'http://localhost:5173',
+          rewrite: (path) => path.replace(/^\/api\/llm/, ''),
+          configure: (proxy, _options) => {
+            proxy.on('error', (err, _req, _res) => {
+              console.log('proxy error', err);
+            });
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              console.log('Sending Request to the Target:', req.method, req.url);
+            });
+            proxy.on('proxyRes', (proxyRes, req, _res) => {
+              console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+            });
+          },
+        }
+      }
     },
     plugins: [
       react(),
@@ -220,10 +238,6 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
-        // Proxy react-router-dom to our wrapper
-        "react-router-dom": path.resolve(__dirname, "./src/lib/react-router-dom-proxy.tsx"),
-        // Original react-router-dom under a different name
-        "react-router-dom-original": "react-router-dom",
       },
     },
     define: {

@@ -24,7 +24,11 @@ import {
   Package,
   Factory,
   Building,
-  Shield
+  Shield,
+  Brain,
+  Cloud,
+  Hash,
+  Zap
 } from "lucide-react";
 import {
   generateRawMaterialData,
@@ -85,22 +89,31 @@ const Index = () => {
       stats: `${dashboardStats.biomassProducts} products`,
       trend: "up"
     },
-    {
-      title: "ISCC+ Certification",
-      description: "Certificate management and compliance",
-      icon: Award,
-      href: "/certification",
-      color: "emerald",
-      stats: "Certified products",
-      trend: "up"
-    },
-    {
+        {
       title: "Carbon Footprint",
       description: "Track emissions and sustainability metrics",
       icon: Leaf,
       href: "/carbon",
       color: "teal",
       stats: `${dashboardStats.carbonReduction}% reduction`,
+      trend: "up"
+    },
+    {
+      title: "Environmental Monitoring",
+      description: "CEMS emission monitoring and compliance",
+      icon: Cloud,
+      href: "/environmental-monitoring",
+      color: "sky",
+      stats: "98.2% compliant",
+      trend: "up"
+    },
+    {
+      title: "Digital Product Passport",
+      description: "Product lifecycle transparency and DPP management",
+      icon: Hash,
+      href: "/digital-product-passport",
+      color: "indigo",
+      stats: "EU DPP Ready",
       trend: "up"
     },
     {
@@ -129,8 +142,26 @@ const Index = () => {
       color: "indigo",
       stats: `${dashboardStats.efficiency}% efficiency`,
       trend: "up"
-    }
-  ];
+    },
+    {
+      title: "Advanced Analytics",
+      description: "AI-powered predictions and optimization",
+      icon: Brain,
+      href: "/advanced-analytics",
+      color: "purple",
+      stats: "AI models active",
+      trend: "up"
+    },
+    {
+      title: "Utility Management",
+      description: "Energy monitoring and utility optimization",
+      icon: Zap,
+      href: "/utility-management",
+      color: "yellow",
+      stats: "Real-time monitoring",
+      trend: "up"
+    },
+      ];
 
   // Recent activities
   const recentActivities = [
@@ -324,10 +355,28 @@ const Index = () => {
                     Generate Certificate
                   </Button>
                 </Link>
+                <Link to="/environmental-monitoring">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Cloud className="h-4 w-4 mr-2" />
+                    Monitor CEMS
+                  </Button>
+                </Link>
+                <Link to="/digital-product-passport">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Hash className="h-4 w-4 mr-2" />
+                    Create DPP
+                  </Button>
+                </Link>
                 <Link to="/analytics">
                   <Button variant="outline" className="w-full justify-start">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     View Reports
+                  </Button>
+                </Link>
+                <Link to="/advanced-analytics">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Brain className="h-4 w-4 mr-2" />
+                    AI Analytics
                   </Button>
                 </Link>
                 <Link to="/supplier-portal">
@@ -340,6 +389,24 @@ const Index = () => {
                   <Button variant="outline" className="w-full justify-start">
                     <Shield className="h-4 w-4 mr-2" />
                     Run Quality Test
+                  </Button>
+                </Link>
+                <Link to="/utility-management">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Zap className="h-4 w-4 mr-2" />
+                    Monitor Utilities
+                  </Button>
+                </Link>
+                <Link to="/mass-balance">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Database className="h-4 w-4 mr-2" />
+                    View IMBL Dashboard
+                  </Button>
+                </Link>
+                <Link to="/certificate-generator">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Award className="h-4 w-4 mr-2" />
+                    Generate Certificate
                   </Button>
                 </Link>
               </div>

@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溶接治具見積もりアプリ（改良版）</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f3f4f6;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .main-layout {
+            display: flex;
+            gap: 30px;
+        }
+        .input-area {
+            flex: 2;
+        }
+        .result-area {
+            flex: 1;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        .input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .grid {
+            display: grid;
+            gap: 15px;
+        }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+        .btn-success {
+            background-color: #059669;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .fixture-card {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 15px;
+        }
+        .fixture-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .fixture-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        .fixture-item {
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px;
+            background: white;
+        }
+        .result-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #3b82f6;
+        }
+        .result-section {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .result-total {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 10px;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .blue { background-color: #f0f9ff; }
+        .green { background-color: #f0fdf4; }
+        .purple { background-color: #faf5ff; }
+        .orange { background-color: #fff7ed; }
+        .yellow { background-color: #fefce8; }
+        .blue .section-title { color: #1e40af; }
+        .green .section-title { color: #15803d; }
+        .purple .section-title { color: #7c3aed; }
+        .orange .section-title { color: #ea580c; }
+        .yellow .section-title { color: #ca8a04; }
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .grid-2, .grid-3, .grid-4, .fixture-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function WeldingJigCalculator() {
+            const [formData, setFormData] = React.useState({
+                projectName: '',
+                baseLength: 1000,
+                baseWidth: 500,
+                baseHeight: 600,
+                baseMaterial: 'steel',
+                baseThickness: 25,
+                accuracy: 0.2,
+                hasSubBase: false,
+                subBaseType: 'fixed',
+                subBaseCount: 1,
+                subBaseSize: '300x300',
+                subBaseLMGuide: false,
+                subBaseHinge: false,
+                subBaseAirCylinder: false,
+                fixtures: [{
+                    id: 1,
+                    quantity: 1,
+                    hasLocator: true,
+                    locatorCount: 1,
+                    locatorType: 'standard',
+                    hasClamp: true,
+                    clampCount: 1,
+                    clampType: 'standard',
+                    clampDiameter: 80,
+                    hasPin: true,
+                    pinCount: 1,
+                    pinType: 'fixed',
+                    hasSwing: false,
+                    swingType: 'swing'
+                }],
+                ioPoints: 40,
+                plcBrand: 'Rockwell',
+                safetyDevices: {
+                    lightCurtain: 0,
+                    safetyMat: 0,
+                    laserScanner: 0
+                },
+                externalConnections: {
+                    robot: 0,
+                    ncLocator: 0,
+                    otherEquipment: 0
+                },
+                lifterCount: 1,
+                lifterCapacity: 50,
+                lifterStroke: 500,
+                setCount: 1
+            });
+
+            const [estimate, setEstimate] = React.useState(null);
+            const [showResult, setShowResult] = React.useState(false);
+
+            const handleInputChange = (field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+            };
+
+            const handleNestedInputChange = (parent, field, value) => {
+                setFormData(prev => ({
+                    ...prev,
+                    [parent]: { ...prev[parent], [field]: value }
+                }));
+            };
+
+            const addFixture = () => {
+                const newFixture = {
+                    id: Date.now(),
+                    quantity: 1,
+                    hasLocator: true,
+                    locatorCount: 1,
+                    locatorType: 'standard',
+                    hasClamp: true,
+                    clampCount: 1,
+                    clampType: 'standard',
+                    clampDiameter: 80,
+                    hasPin: true,
+                    pinCount: 1,
+                    pinType: 'fixed',
+                    hasSwing: false,
+                    swingType: 'swing'
+                };
+                setFormData(prev => ({
+                    ...prev,
+                    fixtures: [...prev.fixtures, newFixture]
+                }));
+            };
+
+            const removeFixture = (id) => {
+                setFormData(prev => ({
+                    ...prev,
+                    fixtures: prev.fixtures.filter(f => f.id !== id)
+                }));
+            };
+
+            const updateFixture = (id, field, value) => {
+                setFormData(prev => ({
+                    ...prev,
+                    fixtures: prev.fixtures.map(f => 
+                        f.id === id ? { ...f, [field]: value } : f
+                    )
+                }));
+            };
+
+            const calculateEstimate = () => {
+                try {
+                    // ベースユニット計算
+                    const baseArea = (formData.baseLength * formData.baseWidth) / 1000000;
+                    const plateWeight = baseArea * (formData.baseThickness / 1000) * 7850;
+                    const basePlateCost = (plateWeight * 300) / 10000;
+                    const baseStructureCost = Math.max(15, baseArea * 8 + (formData.baseHeight - 600) * 0.02);
+                    const accuracyCost = formData.accuracy <= 0.1 ? 35 : formData.accuracy <= 0.2 ? 20 : formData.accuracy <= 0.5 ? 10 : 5;
+                    
+                    // サブベース計算
+                    let subBaseCost = 0;
+                    if (formData.hasSubBase) {
+                        const sizeMultiplier = { '300x300': 1, '500x1000': 2.2, '1000x3000': 4.8 };
+                        const typeMultiplier = { fixed: 1, swing: 1.8, slide: 2.2 };
+                        let baseCost = 28 * formData.subBaseCount * sizeMultiplier[formData.subBaseSize] * typeMultiplier[formData.subBaseType];
+                        if (formData.subBaseLMGuide) baseCost += 15 * formData.subBaseCount;
+                        if (formData.subBaseHinge) baseCost += 12 * formData.subBaseCount;
+                        if (formData.subBaseAirCylinder) baseCost += 25 * formData.subBaseCount;
+                        subBaseCost = baseCost;
+                    }
+                    
+                    const baseUnitCost = basePlateCost + baseStructureCost + accuracyCost + subBaseCost;
+
+                    // フィクスチャー計算
+                    let totalFixtureCost = 0;
+                    formData.fixtures.forEach(fixture => {
+                        let fixtureCost = 0;
+                        
+                        if (fixture.hasLocator) {
+                            const locatorCosts = { standard: 12, precision: 18 };
+                            fixtureCost += locatorCosts[fixture.locatorType] * fixture.locatorCount;
+                        }
+                        
+                        if (fixture.hasClamp) {
+                            const clampBaseCosts = { standard: 20, high_force: 35 };
+                            const diameterMultipliers = { 50: 0.8, 63: 0.9, 80: 1.0, 100: 1.4, 120: 1.8 };
+                            fixtureCost += clampBaseCosts[fixture.clampType] * fixture.clampCount * diameterMultipliers[fixture.clampDiameter];
+                        }
+                        
+                        if (fixture.hasPin) {
+                            const pinCosts = { fixed: 5, shift: 12, pin_clamp: 18 };
+                            fixtureCost += pinCosts[fixture.pinType] * fixture.pinCount;
+                        }
+                        
+                        if (fixture.hasSwing) {
+                            const swingCosts = { swing: 15, shift: 25 };
+                            fixtureCost += swingCosts[fixture.swingType];
+                        }
+                        
+                        totalFixtureCost += fixtureCost * fixture.quantity;
+                    });
+
+                    // 制御系統計算
+                    const plcBrands = {
+                        'Rockwell': { basePrice: 80, ioPointCost: 1.2, panelMultiplier: 1.3, description: 'Allen-Bradley CompactLogix' },
+                        'Siemens': { basePrice: 75, ioPointCost: 1.1, panelMultiplier: 1.25, description: 'SIMATIC S7-1200/1500' },
+                        'Mitsubishi': { basePrice: 60, ioPointCost: 0.9, panelMultiplier: 1.0, description: 'MELSEC iQ-R/iQ-F' },
+                        'Omron': { basePrice: 65, ioPointCost: 0.95, panelMultiplier: 1.1, description: 'CJ2/NJ/NY シリーズ' }
+                    };
+                    
+                    const selectedPlc = plcBrands[formData.plcBrand];
+                    let ioExpansionCost = 0;
+                    const ioTiers = [{ threshold: 40, cost: 25 }, { threshold: 60, cost: 35 }, { threshold: 80, cost: 45 }, { threshold: 120, cost: 60 }, { threshold: 200, cost: 80 }];
+                    
+                    for (const tier of ioTiers) {
+                        if (formData.ioPoints > tier.threshold) {
+                            ioExpansionCost = tier.cost * selectedPlc.ioPointCost;
+                        } else break;
+                    }
+                    
+                    const totalPlcCost = selectedPlc.basePrice + ioExpansionCost;
+                    const safetyDeviceCost = formData.safetyDevices.lightCurtain * 25 + formData.safetyDevices.safetyMat * 15 + formData.safetyDevices.laserScanner * 45;
+                    const externalConnectionCost = formData.externalConnections.robot * 20 + formData.externalConnections.ncLocator * 15 + formData.externalConnections.otherEquipment * 10;
+                    const baseControlPanelCost = formData.ioPoints <= 40 ? 80 : formData.ioPoints <= 60 ? 100 : formData.ioPoints <= 80 ? 130 : formData.ioPoints <= 120 ? 160 : 200;
+                    const controlPanelCost = baseControlPanelCost * selectedPlc.panelMultiplier;
+                    const wiringCost = Math.max(30, formData.ioPoints * 0.8 + Object.values(formData.safetyDevices).reduce((a, b) => a + b, 0) * 3 + Object.values(formData.externalConnections).reduce((a, b) => a + b, 0) * 2);
+                    const controlSystemCost = totalPlcCost + safetyDeviceCost + externalConnectionCost + controlPanelCost + wiringCost;
+
+                    // その他の計算
+                    const lifterSystemCost = 28 * formData.lifterCount + 22 * formData.lifterCount + (formData.lifterCount > 1 ? 35 : 0);
+                    const totalAirPoints = formData.fixtures.reduce((total, fixture) => total + (fixture.hasClamp ? fixture.clampCount * fixture.quantity : 0), 0) + formData.lifterCount + (formData.hasSubBase && formData.subBaseAirCylinder ? formData.subBaseCount : 0);
+                    const airSystemCost = Math.max(25, totalAirPoints * 2.5) + Math.max(20, totalAirPoints * 1.5) + Math.max(40, totalAirPoints * 3.5);
+                    
+                    const complexityPoints = formData.fixtures.reduce((total, fixture) => {
+                        return total + 
+                            (fixture.hasLocator ? fixture.locatorCount * fixture.quantity : 0) +
+                            (fixture.hasClamp ? fixture.clampCount * fixture.quantity : 0) +
+                            (fixture.hasPin ? fixture.pinCount * fixture.quantity : 0) +
+                            (fixture.hasSwing ? fixture.quantity : 0);
+                    }, 0);
+                    
+                    const complexityFactor = complexityPoints / 10;
+                    const engineeringCost = Math.max(80, 50 + complexityFactor * 15 + (formData.hasSubBase ? 25 : 0)) + Math.max(40, 30 + complexityFactor * 8) + Math.max(60, 40 + formData.fixtures.reduce((total, fixture) => total + fixture.quantity, 0) * 5) + Object.values(formData.safetyDevices).reduce((a, b) => a + b, 0) * 8;
+
+                    const unitTotal = baseUnitCost + totalFixtureCost + controlSystemCost + lifterSystemCost + airSystemCost + engineeringCost;
+                    
+                    let discount = 0;
+                    if (formData.setCount >= 4) discount = 0.15;
+                    else if (formData.setCount >= 3) discount = 0.10;
+                    else if (formData.setCount >= 2) discount = 0.05;
+
+                    const discountedUnitPrice = unitTotal * (1 - discount);
+                    const totalCost = discountedUnitPrice * formData.setCount;
+
+                    const designPeriod = Math.max(1.5, complexityFactor / 3 + (formData.hasSubBase ? 0.5 : 0));
+                    const manufacturingPeriod = Math.max(2.5, formData.setCount * 1.2 + complexityFactor / 4);
+                    const adjustmentPeriod = Math.max(0.5, formData.setCount * 0.3 + complexityFactor / 8);
+                    const totalPeriod = designPeriod + manufacturingPeriod + adjustmentPeriod;
+
+                    setEstimate({
+                        baseUnitCost: Math.round(baseUnitCost),
+                        basePlateCost: Math.round(basePlateCost),
+                        baseStructureCost: Math.round(baseStructureCost),
+                        subBaseCost: Math.round(subBaseCost),
+                        totalFixtureCost: Math.round(totalFixtureCost),
+                        controlSystemCost: Math.round(controlSystemCost),
+                        lifterSystemCost: Math.round(lifterSystemCost),
+                        airSystemCost: Math.round(airSystemCost),
+                        engineeringCost: Math.round(engineeringCost),
+                        unitTotal: Math.round(unitTotal),
+                        discount: Math.round(discount * 100),
+                        discountedUnitPrice: Math.round(discountedUnitPrice),
+                        totalCost: Math.round(totalCost),
+                        designPeriod: Math.round(designPeriod * 10) / 10,
+                        manufacturingPeriod: Math.round(manufacturingPeriod * 10) / 10,
+                        adjustmentPeriod: Math.round(adjustmentPeriod * 10) / 10,
+                        totalPeriod: Math.round(totalPeriod * 10) / 10,
+                        totalPlcCost: Math.round(totalPlcCost),
+                        controlPanelCost: Math.round(controlPanelCost),
+                        plcBrandInfo: selectedPlc.description,
+                        safetyDeviceCost: Math.round(safetyDeviceCost),
+                        externalConnectionCost: Math.round(externalConnectionCost),
+                        wiringCost: Math.round(wiringCost),
+                        totalAirPoints: totalAirPoints,
+                        complexityFactor: Math.round(complexityFactor * 10) / 10
+                    });
+
+                    setShowResult(true);
+                } catch (error) {
+                    alert('計算エラーが発生しました: ' + error.message);
+                }
+            };
+
+            const resetForm = () => {
+                setShowResult(false);
+                setEstimate(null);
+            };
+
+            const downloadCSV = () => {
+                if (!estimate) {
+                    alert('先に見積もり計算を実行してください。');
+                    return;
+                }
+
+                const csvData = [
+                    ['項目', '値', '単位'],
+                    ['プロジェクト名', formData.projectName || '未設定'],
+                    ['計算日時', new Date().toLocaleString('ja-JP')],
+                    [''],
+                    ['ベースユニット', estimate.baseUnitCost, '万円'],
+                    ['フィクスチャーユニット', estimate.totalFixtureCost, '万円'],
+                    ['制御系統', estimate.controlSystemCost, '万円'],
+                    ['リフターシステム', estimate.lifterSystemCost, '万円'],
+                    ['エア供給システム', estimate.airSystemCost, '万円'],
+                    ['設計・調整費', estimate.engineeringCost, '万円'],
+                    ['1セット小計', estimate.unitTotal, '万円'],
+                    [''],
+                    ['製作セット数', formData.setCount, 'セット'],
+                    ['総合計', estimate.totalCost, '万円']
+                ];
+
+                const csvContent = '\uFEFF' + csvData.map(row => row.join(',')).join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `溶接治具見積もり_${new Date().toISOString().slice(0, 10)}.csv`;
+                link.click();
+                URL.revokeObjectURL(link.href);
+            };
+
+            return (
+                <div className="container">
+                    <div className="card">
+                        <h1 className="title">溶接治具見積もりアプリ（改良版）</h1>
+                        
+                        <div className="main-layout">
+                            <div className="input-area">
+                                {/* ベース仕様 */}
+                                <div className="section blue">
+                                    <h2 className="section-title">ベース仕様</h2>
+                                    
+                                    <div className="input-group">
+                                        <label className="label">プロジェクト名</label>
+                                        <input
+                                            type="text"
+                                            value={formData.projectName}
+                                            onChange={(e) => handleInputChange('projectName', e.target.value)}
+                                            className="input"
+                                            placeholder="例：クロスメンバ溶接治具"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-4">
+                                        <div className="input-group">
+                                            <label className="label">長さ (mm)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.baseLength}
+                                                onChange={(e) => handleInputChange('baseLength', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">幅 (mm)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.baseWidth}
+                                                onChange={(e) => handleInputChange('baseWidth', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">高さ (mm)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.baseHeight}
+                                                onChange={(e) => handleInputChange('baseHeight', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">板厚 (mm)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.baseThickness}
+                                                onChange={(e) => handleInputChange('baseThickness', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-2">
+                                        <div className="input-group">
+                                            <label className="label">精度要求</label>
+                                            <select
+                                                value={formData.accuracy}
+                                                onChange={(e) => handleInputChange('accuracy', parseFloat(e.target.value))}
+                                                className="input"
+                                            >
+                                                <option value={0.05}>±0.05mm (超高精度)</option>
+                                                <option value={0.1}>±0.1mm (高精度)</option>
+                                                <option value={0.2}>±0.2mm (標準)</option>
+                                                <option value={0.5}>±0.5mm (一般)</option>
+                                            </select>
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">材質</label>
+                                            <select
+                                                value={formData.baseMaterial}
+                                                onChange={(e) => handleInputChange('baseMaterial', e.target.value)}
+                                                className="input"
+                                            >
+                                                <option value="steel">鋼材</option>
+                                                <option value="cast_iron">鋳鉄</option>
+                                                <option value="aluminum">アルミニウム</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="checkbox-group">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.hasSubBase}
+                                            onChange={(e) => handleInputChange('hasSubBase', e.target.checked)}
+                                        />
+                                        <label className="label">サブベースを使用する</label>
+                                    </div>
+                                    
+                                    {formData.hasSubBase && (
+                                        <div style={{ marginLeft: '20px' }}>
+                                            <div className="grid grid-3">
+                                                <div className="input-group">
+                                                    <label className="label">タイプ</label>
+                                                    <select
+                                                        value={formData.subBaseType}
+                                                        onChange={(e) => handleInputChange('subBaseType', e.target.value)}
+                                                        className="input"
+                                                    >
+                                                        <option value="fixed">固定</option>
+                                                        <option value="swing">スイング</option>
+                                                        <option value="slide">スライド</option>
+                                                    </select>
+                                                </div>
+                                                <div className="input-group">
+                                                    <label className="label">サイズ</label>
+                                                    <select
+                                                        value={formData.subBaseSize}
+                                                        onChange={(e) => handleInputChange('subBaseSize', e.target.value)}
+                                                        className="input"
+                                                    >
+                                                        <option value="300x300">300×300mm</option>
+                                                        <option value="500x1000">500×1000mm</option>
+                                                        <option value="1000x3000">1000×3000mm</option>
+                                                    </select>
+                                                </div>
+                                                <div className="input-group">
+                                                    <label className="label">数量</label>
+                                                    <input
+                                                        type="number"
+                                                        value={formData.subBaseCount}
+                                                        onChange={(e) => handleInputChange('subBaseCount', parseInt(e.target.value) || 0)}
+                                                        className="input"
+                                                    />
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="grid grid-3">
+                                                <div className="checkbox-group">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.subBaseLMGuide}
+                                                        onChange={(e) => handleInputChange('subBaseLMGuide', e.target.checked)}
+                                                    />
+                                                    <span>LMガイド</span>
+                                                </div>
+                                                <div className="checkbox-group">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.subBaseHinge}
+                                                        onChange={(e) => handleInputChange('subBaseHinge', e.target.checked)}
+                                                    />
+                                                    <span>ヒンジ機構</span>
+                                                </div>
+                                                <div className="checkbox-group">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.subBaseAirCylinder}
+                                                        onChange={(e) => handleInputChange('subBaseAirCylinder', e.target.checked)}
+                                                    />
+                                                    <span>エアシリンダー</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* フィクスチャー仕様 */}
+                                <div className="section green">
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                                        <h2 className="section-title" style={{ marginBottom: 0 }}>フィクスチャー仕様</h2>
+                                        <button onClick={addFixture} className="btn btn-primary btn-sm">+ パターン追加</button>
+                                    </div>
+                                    
+                                    {formData.fixtures.map((fixture, index) => (
+                                        <div key={fixture.id} className="fixture-card">
+                                            <div className="fixture-header">
+                                                <h3>フィクスチャーパターン {index + 1}</h3>
+                                                {formData.fixtures.length > 1 && (
+                                                    <button
+                                                        onClick={() => removeFixture(fixture.id)}
+                                                        className="btn btn-danger"
+                                                    >
+                                                        削除
+                                                    </button>
+                                                )}
+                                            </div>
+                                            
+                                            <div className="input-group">
+                                                <label className="label">このパターンの数量</label>
+                                                <input
+                                                    type="number"
+                                                    value={fixture.quantity}
+                                                    onChange={(e) => updateFixture(fixture.id, 'quantity', parseInt(e.target.value) || 0)}
+                                                    className="input"
+                                                />
+                                            </div>
+                                            
+                                            <div className="fixture-grid">
+                                                {/* ロケータ */}
+                                                <div className="fixture-item">
+                                                    <div className="checkbox-group">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={fixture.hasLocator}
+                                                            onChange={(e) => updateFixture(fixture.id, 'hasLocator', e.target.checked)}
+                                                        />
+                                                        <label>ロケータ</label>
+                                                    </div>
+                                                    {fixture.hasLocator && (
+                                                        <div>
+                                                            <select
+                                                                value={fixture.locatorType}
+                                                                onChange={(e) => updateFixture(fixture.id, 'locatorType', e.target.value)}
+                                                                className="input"
+                                                                style={{ marginBottom: '5px', fontSize: '12px' }}
+                                                            >
+                                                                <option value="standard">標準</option>
+                                                                <option value="precision">高精度</option>
+                                                            </select>
+                                                            <input
+                                                                type="number"
+                                                                value={fixture.locatorCount}
+                                                                onChange={(e) => updateFixture(fixture.id, 'locatorCount', parseInt(e.target.value) || 0)}
+                                                                className="input"
+                                                                placeholder="数量"
+                                                                style={{ fontSize: '12px' }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* クランプ */}
+                                                <div className="fixture-item">
+                                                    <div className="checkbox-group">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={fixture.hasClamp}
+                                                            onChange={(e) => updateFixture(fixture.id, 'hasClamp', e.target.checked)}
+                                                        />
+                                                        <label>クランプ</label>
+                                                    </div>
+                                                    {fixture.hasClamp && (
+                                                        <div>
+                                                            <select
+                                                                value={fixture.clampType}
+                                                                onChange={(e) => updateFixture(fixture.id, 'clampType', e.target.value)}
+                                                                className="input"
+                                                                style={{ marginBottom: '5px', fontSize: '12px' }}
+                                                            >
+                                                                <option value="standard">標準</option>
+                                                                <option value="high_force">高推力</option>
+                                                            </select>
+                                                            <select
+                                                                value={fixture.clampDiameter}
+                                                                onChange={(e) => updateFixture(fixture.id, 'clampDiameter', parseInt(e.target.value))}
+                                                                className="input"
+                                                                style={{ marginBottom: '5px', fontSize: '12px' }}
+                                                            >
+                                                                <option value={50}>φ50mm</option>
+                                                                <option value={63}>φ63mm</option>
+                                                                <option value={80}>φ80mm</option>
+                                                                <option value={100}>φ100mm</option>
+                                                                <option value={120}>φ120mm</option>
+                                                            </select>
+                                                            <input
+                                                                type="number"
+                                                                value={fixture.clampCount}
+                                                                onChange={(e) => updateFixture(fixture.id, 'clampCount', parseInt(e.target.value) || 0)}
+                                                                className="input"
+                                                                placeholder="数量"
+                                                                style={{ fontSize: '12px' }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* ピン */}
+                                                <div className="fixture-item">
+                                                    <div className="checkbox-group">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={fixture.hasPin}
+                                                            onChange={(e) => updateFixture(fixture.id, 'hasPin', e.target.checked)}
+                                                        />
+                                                        <label>ピン</label>
+                                                    </div>
+                                                    {fixture.hasPin && (
+                                                        <div>
+                                                            <select
+                                                                value={fixture.pinType}
+                                                                onChange={(e) => updateFixture(fixture.id, 'pinType', e.target.value)}
+                                                                className="input"
+                                                                style={{ marginBottom: '5px', fontSize: '12px' }}
+                                                            >
+                                                                <option value="fixed">固定</option>
+                                                                <option value="shift">シフト</option>
+                                                                <option value="pin_clamp">ピンクランプ</option>
+                                                            </select>
+                                                            <input
+                                                                type="number"
+                                                                value={fixture.pinCount}
+                                                                onChange={(e) => updateFixture(fixture.id, 'pinCount', parseInt(e.target.value) || 0)}
+                                                                className="input"
+                                                                placeholder="数量"
+                                                                style={{ fontSize: '12px' }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* 振込み */}
+                                                <div className="fixture-item">
+                                                    <div className="checkbox-group">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={fixture.hasSwing}
+                                                            onChange={(e) => updateFixture(fixture.id, 'hasSwing', e.target.checked)}
+                                                        />
+                                                        <label>振込み</label>
+                                                    </div>
+                                                    {fixture.hasSwing && (
+                                                        <select
+                                                            value={fixture.swingType}
+                                                            onChange={(e) => updateFixture(fixture.id, 'swingType', e.target.value)}
+                                                            className="input"
+                                                            style={{ fontSize: '12px' }}
+                                                        >
+                                                            <option value="swing">スイング</option>
+                                                            <option value="shift">シフト</option>
+                                                        </select>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* 制御仕様 */}
+                                <div className="section purple">
+                                    <h2 className="section-title">制御仕様</h2>
+                                    
+                                    <div className="grid grid-2">
+                                        <div className="input-group">
+                                            <label className="label">基本入出力点数</label>
+                                            <input
+                                                type="number"
+                                                value={formData.ioPoints}
+                                                onChange={(e) => handleInputChange('ioPoints', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">PLCブランド</label>
+                                            <select
+                                                value={formData.plcBrand}
+                                                onChange={(e) => handleInputChange('plcBrand', e.target.value)}
+                                                className="input"
+                                            >
+                                                <option value="Rockwell">Rockwell</option>
+                                                <option value="Siemens">Siemens</option>
+                                                <option value="Mitsubishi">Mitsubishi</option>
+                                                <option value="Omron">Omron</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <h3 style={{ fontSize: '14px', margin: '15px 0 10px 0' }}>安全装置接続</h3>
+                                    <div className="grid grid-3">
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>ライトカーテン</label>
+                                            <input
+                                                type="number"
+                                                value={formData.safetyDevices.lightCurtain}
+                                                onChange={(e) => handleNestedInputChange('safetyDevices', 'lightCurtain', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>安全マット</label>
+                                            <input
+                                                type="number"
+                                                value={formData.safetyDevices.safetyMat}
+                                                onChange={(e) => handleNestedInputChange('safetyDevices', 'safetyMat', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>レーザースキャナー</label>
+                                            <input
+                                                type="number"
+                                                value={formData.safetyDevices.laserScanner}
+                                                onChange={(e) => handleNestedInputChange('safetyDevices', 'laserScanner', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <h3 style={{ fontSize: '14px', margin: '15px 0 10px 0' }}>外部機器接続</h3>
+                                    <div className="grid grid-3">
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>ロボット</label>
+                                            <input
+                                                type="number"
+                                                value={formData.externalConnections.robot}
+                                                onChange={(e) => handleNestedInputChange('externalConnections', 'robot', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>NCロケータ</label>
+                                            <input
+                                                type="number"
+                                                value={formData.externalConnections.ncLocator}
+                                                onChange={(e) => handleNestedInputChange('externalConnections', 'ncLocator', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label" style={{ fontSize: '12px' }}>その他機器</label>
+                                            <input
+                                                type="number"
+                                                value={formData.externalConnections.otherEquipment}
+                                                onChange={(e) => handleNestedInputChange('externalConnections', 'otherEquipment', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* リフター仕様 */}
+                                <div className="section orange">
+                                    <h2 className="section-title">リフター仕様</h2>
+                                    
+                                    <div className="grid grid-3">
+                                        <div className="input-group">
+                                            <label className="label">リフター数</label>
+                                            <input
+                                                type="number"
+                                                value={formData.lifterCount}
+                                                onChange={(e) => handleInputChange('lifterCount', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">能力 (kg)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.lifterCapacity}
+                                                onChange={(e) => handleInputChange('lifterCapacity', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                        <div className="input-group">
+                                            <label className="label">ストローク (mm)</label>
+                                            <input
+                                                type="number"
+                                                value={formData.lifterStroke}
+                                                onChange={(e) => handleInputChange('lifterStroke', parseInt(e.target.value) || 0)}
+                                                className="input"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 製作仕様 */}
+                                <div className="section yellow">
+                                    <h2 className="section-title">製作仕様</h2>
+                                    
+                                    <div className="input-group">
+                                        <label className="label">製作セット数</label>
+                                        <input
+                                            type="number"
+                                            value={formData.setCount}
+                                            onChange={(e) => handleInputChange('setCount', parseInt(e.target.value) || 0)}
+                                            className="input"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="buttons">
+                                    <button onClick={calculateEstimate} className="btn btn-primary">見積もり計算</button>
+                                    <button onClick={resetForm} className="btn btn-secondary">リセット</button>
+                                    {showResult && (
+                                        <button onClick={downloadCSV} className="btn btn-success">📄 CSV ダウンロード</button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* 結果表示 */}
+                            <div className="result-area">
+                                {showResult && estimate ? (
+                                    <div className="result-card">
+                                        <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af', marginBottom: '20px' }}>見積もり結果</h2>
+
+                                        <div className="result-section">
+                                            <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '10px' }}>プロジェクト情報</h3>
+                                            <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                                                <p>プロジェクト名: {formData.projectName || '未設定'}</p>
+                                                <p>ベースサイズ: {formData.baseLength} × {formData.baseWidth} × {formData.baseHeight}mm</p>
+                                                <p>フィクスチャー総数: {formData.fixtures.reduce((total, fixture) => total + fixture.quantity, 0)}本</p>
+                                                <p>制御システム: {formData.plcBrand} PLC ({estimate.plcBrandInfo})</p>
+                                                <p>精度: ±{formData.accuracy}mm</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="result-section">
+                                            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#1d4ed8', marginBottom: '10px' }}>コスト内訳（1セット当たり）</h3>
+                                            <div className="result-row">
+                                                <span>ベースユニット</span>
+                                                <span>{estimate.baseUnitCost}万円</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>フィクスチャーユニット</span>
+                                                <span>{estimate.totalFixtureCost}万円</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>制御系統</span>
+                                                <span>{estimate.controlSystemCost}万円</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>リフターシステム</span>
+                                                <span>{estimate.lifterSystemCost}万円</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>エア供給システム</span>
+                                                <span>{estimate.airSystemCost}万円</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>設計・調整費</span>
+                                                <span>{estimate.engineeringCost}万円</span>
+                                            </div>
+                                            <div className="result-row result-total">
+                                                <span>1セット小計</span>
+                                                <span>{estimate.unitTotal}万円</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="result-section">
+                                            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#15803d', marginBottom: '10px' }}>最終見積もり</h3>
+                                            <div className="result-row">
+                                                <span>製作セット数</span>
+                                                <span>{formData.setCount}セット</span>
+                                            </div>
+                                            {estimate.discount > 0 && (
+                                                <div className="result-row" style={{ color: '#15803d' }}>
+                                                    <span>複数セット割引</span>
+                                                    <span>-{estimate.discount}%</span>
+                                                </div>
+                                            )}
+                                            <div className="result-row">
+                                                <span>セット単価（割引後）</span>
+                                                <span>{estimate.discountedUnitPrice}万円</span>
+                                            </div>
+                                            <div className="result-row result-total" style={{ fontSize: '18px', color: '#15803d' }}>
+                                                <span>総合計</span>
+                                                <span>{estimate.totalCost}万円</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="result-section">
+                                            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#ca8a04', marginBottom: '10px' }}>納期予定</h3>
+                                            <div className="result-row">
+                                                <span>設計期間</span>
+                                                <span>{estimate.designPeriod}ヶ月</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>製作期間</span>
+                                                <span>{estimate.manufacturingPeriod}ヶ月</span>
+                                            </div>
+                                            <div className="result-row">
+                                                <span>調整期間</span>
+                                                <span>{estimate.adjustmentPeriod}ヶ月</span>
+                                            </div>
+                                            <div className="result-row result-total">
+                                                <span>合計納期</span>
+                                                <span>{estimate.totalPeriod}ヶ月</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div style={{ 
+                                        backgroundColor: '#f3f4f6', 
+                                        borderRadius: '8px', 
+                                        padding: '40px', 
+                                        textAlign: 'center' 
+                                    }}>
+                                        <div style={{ 
+                                            fontSize: '48px',
+                                            marginBottom: '20px'
+                                        }}>
+                                            📊
+                                        </div>
+                                        <p style={{ color: '#6b7280', margin: 0 }}>左側のフォームに入力して「見積もり計算」ボタンを押してください</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WeldingJigCalculator />);
+    </script>
+</body>
+</html>

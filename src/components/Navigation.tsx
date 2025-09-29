@@ -20,7 +20,13 @@ import {
   Download,
   ChevronDown,
   MoreHorizontal,
-  Database
+  Database,
+  Scale,
+  Activity,
+  Layers,
+  Hash,
+  Zap,
+  Cloud
 } from "lucide-react";
 
 const Navigation = () => {
@@ -45,12 +51,6 @@ const Navigation = () => {
       href: "/",
       icon: Home,
       description: "Overview & key metrics"
-    },
-    {
-      title: "ISCC+ Certification",
-      href: "/certification",
-      icon: Award,
-      description: "Certificates & compliance"
     },
     {
       title: "Order & Stock",
@@ -92,6 +92,18 @@ const Navigation = () => {
       description: "Cost tracking & optimization"
     },
     {
+      title: "Edge Collectors",
+      href: "/edge-collectors",
+      icon: Activity,
+      description: "IoT device management & data collection"
+    },
+    {
+      title: "Utility Management",
+      href: "/utility-management",
+      icon: Zap,
+      description: "Energy monitoring & utility optimization"
+    },
+    {
       title: "Indirect Materials",
       href: "/indirect-materials",
       icon: Wrench,
@@ -107,16 +119,67 @@ const Navigation = () => {
       description: "Reports & insights"
     },
     {
+      title: "Advanced Analytics",
+      href: "/advanced-analytics",
+      icon: Brain,
+      description: "AI-powered predictions & optimization"
+    },
+    {
       title: "Advanced Reporting",
       href: "/advanced-reporting",
       icon: Download,
       description: "Report generation & exports"
     },
     {
+      title: "AI Report Generator",
+      href: "/ai-report-generator",
+      icon: Brain,
+      description: "AI-powered intelligent reporting"
+    },
+    {
+      title: "AI Credit Calculator",
+      href: "/ai-credit-calculator",
+      icon: Activity,
+      description: "Enhanced credit calculation with AI"
+    },
+    {
       title: "Predictive Analytics",
       href: "/predictive-analytics",
-      icon: Brain,
-      description: "AI-powered predictions & insights"
+      icon: Activity,
+      description: "Predictive modeling & forecasting"
+    }
+  ];
+
+  const certificationItems = [
+    {
+      title: "Certificate Management",
+      href: "/certification",
+      icon: Award,
+      description: "ISCC+ certificates & compliance management"
+    },
+    {
+      title: "Mass Balance Dashboard",
+      href: "/mass-balance",
+      icon: Scale,
+      description: "Real-time IMBL monitoring & pool management"
+    },
+    {
+      title: "Certificate Generator",
+      href: "/certificate-generator",
+      icon: Award,
+      description: "Automated ISCC+ certificate generation"
+    },
+    {
+      title: "ISA-95 Integration",
+      href: "/isa95-integration",
+      icon: Layers,
+      description: "Automation pyramid integration & contract validation"
+    },
+    {
+      title: "LLM API Settings",
+      href: "/llm-settings",
+      icon: Settings,
+      description: "Configure AI providers and APIs"
     }
   ];
 
@@ -126,6 +189,18 @@ const Navigation = () => {
       href: "/carbon",
       icon: Leaf,
       description: "Emissions & sustainability"
+    },
+    {
+      title: "Environmental Monitoring",
+      href: "/environmental-monitoring",
+      icon: Cloud,
+      description: "CEMS & emission monitoring"
+    },
+    {
+      title: "Digital Product Passport",
+      href: "/digital-product-passport",
+      icon: Hash,
+      description: "Product lifecycle transparency"
     }
   ];
 
@@ -133,6 +208,7 @@ const Navigation = () => {
     ...coreNavigationItems,
     ...managementItems,
     ...analyticsItems,
+    ...certificationItems,
     ...complianceItems
   ];
 
@@ -241,9 +317,15 @@ const Navigation = () => {
             />
 
             <DropdownMenu
+              title="ISCC+ Certification"
+              items={certificationItems}
+              icon={Award}
+            />
+
+            <DropdownMenu
               title="Compliance"
               items={complianceItems}
-              icon={Award}
+              icon={Leaf}
             />
           </div>
         </div>
@@ -312,6 +394,25 @@ const Navigation = () => {
                       Analytics
                     </div>
                     {analyticsItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        onClick={() => setIsTabletMoreOpen(false)}
+                        className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                          isActive(item.href)
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4 mr-3" />
+                        {item.title}
+                      </Link>
+                    ))}
+
+                    <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+                      ISCC+ Certification
+                    </div>
+                    {certificationItems.map((item) => (
                       <Link
                         key={item.href}
                         to={item.href}

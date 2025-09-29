@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -286,10 +287,12 @@ const ProductionPlanPage = () => {
               <Download className="h-4 w-4 mr-2" />
               Export Schedule
             </Button>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Plan
-            </Button>
+            <Link to="/production-plan/new">
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New Plan
+              </Button>
+            </Link>
           </div>
         </div>
 
