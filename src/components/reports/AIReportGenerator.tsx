@@ -42,7 +42,7 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedProvider, setSelectedProvider] = useState<string>('');
   const [language, setLanguage] = useState<'ja' | 'en'>('ja');
-  const [includeRecommendations, setIncludeRecommendations] = useState(true);
+  const [includeRecommendations, setIncludeRecommendations] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedReport, setGeneratedReport] = useState<GeneratedReport | null>(null);
@@ -62,7 +62,9 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
       const availableProviders = llmService.getAvailableProviders();
       if (availableProviders.length > 0) {
         setProviders(availableProviders);
-        setSelectedProvider(availableProviders[0].id);
+        // deepseekが利用可能ならそれをデフォルトに、そうでなければ最初のプロバイダーを使用
+        const deepseekProvider = availableProviders.find(p => p.id === 'deepseek');
+        setSelectedProvider(deepseekProvider ? deepseekProvider.id : availableProviders[0].id);
         console.log('Loaded providers from llmService:', availableProviders);
       } else {
         // フォールバック：localStorageから読み込み
@@ -72,7 +74,9 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
           const enabledProviders = parsed.filter((p: LLMProvider) => p.enabled && p.apiKey);
           setProviders(enabledProviders);
           if (enabledProviders.length > 0) {
-            setSelectedProvider(enabledProviders[0].id);
+            // deepseekが利用可能ならそれをデフォルトに、そうでなければ最初のプロバイダーを使用
+            const deepseekProvider = enabledProviders.find(p => p.id === 'deepseek');
+            setSelectedProvider(deepseekProvider ? deepseekProvider.id : enabledProviders[0].id);
           }
         } else {
           // デフォルトプロバイダーを設定
@@ -85,7 +89,9 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
           const enabledProviders = defaultProviders.filter((p: LLMProvider) => p.enabled && p.apiKey);
           setProviders(enabledProviders);
           if (enabledProviders.length > 0) {
-            setSelectedProvider(enabledProviders[0].id);
+            // deepseekが利用可能ならそれをデフォルトに、そうでなければ最初のプロバイダーを使用
+            const deepseekProvider = enabledProviders.find(p => p.id === 'deepseek');
+            setSelectedProvider(deepseekProvider ? deepseekProvider.id : enabledProviders[0].id);
             // localStorageに保存
             localStorage.setItem('llm-providers', JSON.stringify(defaultProviders));
           }
@@ -102,7 +108,9 @@ export default function AIReportGenerator({ onDataFetch }: AIReportGeneratorProp
       })).filter((p: LLMProvider) => p.enabled && p.apiKey);
       setProviders(fallbackProviders);
       if (fallbackProviders.length > 0) {
-        setSelectedProvider(fallbackProviders[0].id);
+        // deepseekが利用可能ならそれをデフォルトに、そうでなければ最初のプロバイダーを使用
+        const deepseekProvider = fallbackProviders.find(p => p.id === 'deepseek');
+        setSelectedProvider(deepseekProvider ? deepseekProvider.id : fallbackProviders[0].id);
       }
     }
   };
