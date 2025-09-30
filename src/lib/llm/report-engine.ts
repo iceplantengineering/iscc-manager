@@ -78,7 +78,7 @@ export interface GeneratedReport {
 export class AIReportEngine {
   private reportTemplates = {
     'credit-audit': {
-      systemPrompt: `あなたはISCC+クレジット監査の専門家です。以下のデータに基づいて、クレジット監査レポートを作成してください。
+      systemPrompt: `あなたは監査の専門家です。以下のデータに基づいて、クレジット監査レポートを作成してください。
 
 【重要】これは「クレジット監査レポート」です。クレジットの監査とコンプライアンスに特化した内容を作成してください。
 
@@ -115,7 +115,7 @@ ${data.creditData.usage.map(u => `- ${u.date}: ${u.creditsUsed}単位使用 (${u
 監査指摘事項：
 ${data.auditData.findings.map(f => `- ${f.severity}レベル: ${f.description} (${f.status})`).join('\n')}
 
-上記データを基に、クレジット監査の専門家として、ISCC+クレジットシステムの監査結果を詳細に分析し、具体的な数値と評価を含めたレポートを作成してください。特にコンプライアンスとリスク管理に焦点を当ててください。`
+上記データを基に、監査の専門家として、システムの監査結果を詳細に分析し、具体的な数値と評価を含めたレポートを作成してください。特にコンプライアンスとリスク管理に焦点を当ててください。`
     },
     'supplier-evaluation': {
       systemPrompt: `あなたはサプライヤー評価の専門家です。提供されたサプライヤーデータに基づいて評価レポートを作成してください。
@@ -154,7 +154,7 @@ ${data.supplierData.map(s => `
 上記データを基に、サプライヤー管理の専門家として、各サプライヤーの持続可能性と信頼性を詳細に評価し、サプライヤー選定の具体的な推奨事項を含めたレポートを作成してください。特にサプライヤーリスクと供給チェーンの安定性に焦点を当ててください。`
     },
     'production-efficiency': {
-      systemPrompt: `あなたはISCC+認証工場の生産効率分析の専門家です。提供された生産データに基づいて、生産効率分析レポートを作成してください。
+      systemPrompt: `あなたは生産効率分析の専門家です。提供された生産データに基づいて、生産効率分析レポートを作成してください。
 
 【重要】これは「生産効率分析レポート」です。生産プロセスの効率性と品質管理に特化した内容を作成してください。
 
@@ -190,10 +190,10 @@ ${data.supplierData.map(s => `
 - 品質スコア90%以上: 高品質生産
 - 効率性80%未満: 改善が必要
 
-上記データを基に、生産効率分析の専門家として、ISCC+認証工場の生産プロセス効率を詳細に分析し、具体的な数値と評価を含めたレポートを作成してください。特に生産性向上と品質安定化に焦点を当ててください。`
+上記データを基に、生産効率分析の専門家として、生産プロセス効率を詳細に分析し、具体的な数値と評価を含めたレポートを作成してください。特に生産性向上と品質安定化に焦点を当ててください。`
     },
     'sustainability-progress': {
-      systemPrompt: `あなたはISCC+認証におけるサステナビリティ進捗管理の専門家です。提供されたデータに基づいて、サステナビリティ進捗報告書を作成してください。
+      systemPrompt: `あなたはサステナビリティ進捗管理の専門家です。提供されたデータに基づいて、サステナビリティ進捗報告書を作成してください。
 
 【重要】これは「サステナビリティ進捗報告書」です。環境配慮と持続可能な生産活動の進捗管理に特化した内容を作成してください。
 
@@ -214,7 +214,7 @@ ${data.supplierData.map(s => `
 【サステナビリティ進捗報告書作成用データ】
 
 総合サステナビリティ指標：
-- ISCC+クレジット総量: ${data.creditData.totalCredits} 単位
+- クレジット総量: ${data.creditData.totalCredits} 単位
 - 生産効率: ${data.productionData.efficiency}%
 - 品質スコア: ${data.productionData.quality}%
 - コンプライアンススコア: ${data.auditData.compliance}%
@@ -237,12 +237,12 @@ ${data.supplierData.map(s => `
 - サプライヤー持続可能性85%以上: グリーンサプライヤー
 - コンプライアンス95%以上: 優れたガバナンス
 
-上記データを基に、サステナビリティ進捗管理の専門家として、ISCC+認証における持続可能な生産活動の進捗を詳細に分析し、具体的な数値と評価を含めた報告書を作成してください。特に環境負荷削減と持続可能性向上に焦点を当ててください。`
+上記データを基に、サステナビリティ進捗管理の専門家として、持続可能な生産活動の進捗を詳細に分析し、具体的な数値と評価を含めた報告書を作成してください。特に環境負荷削減と持続可能性向上に焦点を当ててください。`
     },
     'risk-assessment': {
-      systemPrompt: `あなたはISCC+認証システムにおけるリスク評価の専門家です。提供されたデータに基づいて、包括的なリスク評価レポートを作成してください。
+      systemPrompt: `あなたはリスク評価の専門家です。提供されたデータに基づいて、包括的なリスク評価レポートを作成してください。
 
-【重要】これは「リスク評価レポート」です。ISCC+クレジットシステム全体のリスク要因分析とリスク管理に特化した内容を作成してください。
+【重要】これは「リスク評価レポート」です。組織全体のリスク要因分析とリスク管理に特化した内容を作成してください。
 
 【レポート構造の指示】
 まず、タイトルを見出し1（# ）で記述し、その後に要約を2-3文で記述してください。
@@ -295,7 +295,7 @@ ${data.auditData.findings.map(f => `- ${f.severity}レベル: ${f.description} (
 - リスクレベル20-50%: 中リスク（定期監視）
 - リスクレベル50%以上: 高リスク（即時対応）
 
-上記データを基に、リスク評価の専門家として、ISCC+クレジットシステム全体のリスク要因を詳細に分析し、具体的なリスクレベル評価と緩和策を含めたレポートを作成してください。特に予防的リスク管理と事業継続性に焦点を当ててください。`
+上記データを基に、リスク評価の専門家として、組織全体のリスク要因を詳細に分析し、具体的なリスクレベル評価と緩和策を含めたレポートを作成してください。特に予防的リスク管理と事業継続性に焦点を当ててください。`
     }
   };
 
@@ -464,7 +464,7 @@ ${data.creditData.usage.map(u => `- ${u.date}: ${u.creditsUsed}単位 (${u.purpo
 3. 使用パターンからの異常検知可能性
 4. 未解決指摘事項の優先度と影響度
 
-ISCC+クレジット監査の専門家として、上記データを深く分析し、具体的な数値目標と実行計画を含む3-5つの戦略的推奨事項を作成してください。`,
+監査の専門家として、上記データを深く分析し、具体的な数値目標と実行計画を含む3-5つの戦略的推奨事項を作成してください。`,
 
       'supplier-evaluation': `
 ${lang.instruction}
@@ -531,7 +531,7 @@ ${lang.focus}
 
 【サステナビリティ総合評価】
 コア指標:
-- ISCC+クレジット総量: ${data.creditData.totalCredits} 単位
+- クレジット総量: ${data.creditData.totalCredits} 単位
 - 生産効率: ${data.productionData.efficiency}% (${data.productionData.efficiency >= 85 ? '優秀' : '改善必要'})
 - 品質スコア: ${data.productionData.quality}% (${data.productionData.quality >= 90 ? '高品質' : '改善必要'})
 - コンプライアンス: ${data.auditData.compliance}% (${data.auditData.compliance >= 95 ? '優秀' : '改善必要'})
@@ -615,7 +615,7 @@ Audit Status:
 3. Anomaly detection potential from usage patterns
 4. Priority and impact of unresolved findings
 
-As an ISCC+ credit audit expert, create 3-5 strategic recommendations with specific numerical targets and implementation plans.`,
+As a risk assessment expert, create 3-5 strategic risk management recommendations with specific mitigation targets and implementation timelines.`,
 
       'supplier-evaluation': `
 ${lang.instruction}
@@ -682,7 +682,7 @@ ${lang.focus}
 
 [Sustainability Comprehensive Assessment]
 Core Metrics:
-- ISCC+ Credit Total: ${data.creditData.totalCredits} units
+- Credit Total: ${data.creditData.totalCredits} units
 - Production Efficiency: ${data.productionData.efficiency}% (${data.productionData.efficiency >= 85 ? 'Excellent' : 'Needs Improvement'})
 - Quality Score: ${data.productionData.quality}% (${data.productionData.quality >= 90 ? 'High Quality' : 'Needs Improvement'})
 - Compliance: ${data.auditData.compliance}% (${data.auditData.compliance >= 95 ? 'Excellent' : 'Needs Improvement'})
@@ -762,28 +762,28 @@ As a risk assessment expert, create 3-5 strategic risk management recommendation
     return [
       {
         id: 'credit-audit',
-        name: 'クレジット監査レポート',
-        description: 'ISCC+クレジットの使用状況とコンプライアンスに関する詳細監査レポート'
+        name: 'Credit Audit Report',
+        description: 'Detailed audit report on credit usage and compliance'
       },
       {
         id: 'supplier-evaluation',
-        name: 'サプライヤー評価レポート',
-        description: 'サプライヤーの持続可能性と信頼性に関する評価レポート'
+        name: 'Supplier Evaluation Report',
+        description: 'Evaluation report on supplier sustainability and reliability'
       },
       {
         id: 'production-efficiency',
-        name: '生産効率分析レポート',
-        description: '生産プロセスの効率性と品質に関する分析レポート'
+        name: 'Production Efficiency Analysis',
+        description: 'Analysis report on production process efficiency and quality'
       },
       {
         id: 'sustainability-progress',
-        name: 'サステナビリティ進捗報告書',
-        description: 'サステナビリティ目標の達成状況に関する進捗報告'
+        name: 'Sustainability Progress Report',
+        description: 'Progress report on sustainability goal achievement status'
       },
       {
         id: 'risk-assessment',
-        name: 'リスク評価レポート',
-        description: 'システム全体のリスク評価と緩和策に関するレポート'
+        name: 'Risk Assessment Report',
+        description: 'Comprehensive risk assessment and mitigation strategy report'
       }
     ];
   }
