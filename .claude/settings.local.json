@@ -25,7 +25,9 @@
       "Bash(git checkout:*)",
       "Bash(powershell:*)",
       "Bash(npm:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(VITE_ENABLE_ROUTE_MESSAGING=true vite:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
