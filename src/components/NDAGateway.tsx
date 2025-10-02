@@ -23,45 +23,42 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-3xl">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-600 rounded-full mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome to Our Partnership Portal</h1>
-          <p className="text-slate-600">A collaborative platform for sustainable materials innovation</p>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">開発中プロトタイプ - 関係者限定</h1>
         </div>
 
         <Card className="shadow-xl border-0">
-          <CardHeader className="bg-slate-50 border-b">
-            <CardTitle className="flex items-center gap-2 text-slate-900">
-              <Users className="w-5 h-5" />
-              Partnership Access Confirmation
-            </CardTitle>
-            <CardDescription>
-              Please confirm your understanding of our collaborative system
-            </CardDescription>
-          </CardHeader>
-
           <CardContent className="p-8">
             <div className="space-y-6">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 border border-blue-100">
-              <div className="text-center space-y-4">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
-                  <Users className="w-6 h-6 text-blue-600" />
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-8 border border-amber-200">
+                <div className="text-center space-y-4">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-100 rounded-full mb-4">
+                    <Shield className="w-6 h-6 text-amber-700" />
+                  </div>
+                  <p className="text-base text-slate-700 leading-relaxed">
+                    本システムは<strong className="text-slate-900">東レ工業株式会社</strong>様向けに<br />
+                    <strong className="text-slate-900">株式会社SHINWA</strong>が開発中のプロトタイプです。
+                  </p>
+                  <div className="text-left space-y-3 mt-6 max-w-md mx-auto">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 rounded-full mt-2"></div>
+                      <p className="text-sm text-slate-600">アクセスは許可された関係者に限定されています</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 rounded-full mt-2"></div>
+                      <p className="text-sm text-slate-600">無断での第三者への開示・共有はお控えください</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 rounded-full mt-2"></div>
+                      <p className="text-sm text-slate-600">本画面のスクリーンショットや録画もご遠慮ください</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900">
-                  Welcome to the ISCC+ Production Manager
-                </h3>
-                <p className="text-slate-600 max-w-md mx-auto">
-                  This collaborative system is designed for partnership between
-                  <strong> Shinwa Co., Ltd.</strong> and <strong> Toray Industries, Inc.</strong>
-                </p>
-                <p className="text-sm text-slate-500">
-                  Together we're working on sustainable materials production and ISCC+ certification management
-                </p>
               </div>
-            </div>
 
               <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
                 <div className="flex items-start space-x-4">
@@ -71,18 +68,13 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                     onCheckedChange={(checked) => setIsChecked(checked as boolean)}
                     className="mt-1"
                   />
-                  <div className="flex-1 space-y-2">
+                  <div className="flex-1">
                     <label
                       htmlFor="nda-accept"
-                      className="text-base font-medium text-slate-900 cursor-pointer hover:text-blue-700 transition-colors"
+                      className="text-base font-medium text-slate-900 cursor-pointer hover:text-amber-700 transition-colors"
                     >
-                      I understand this is a shared system for our business partnership
+                      内容を確認しました
                     </label>
-                    <p className="text-sm text-slate-600 leading-relaxed">
-                      I confirm that I'm an authorized user working on collaborative projects between
-                      Shinwa Co., Ltd. and Toray Industries, Inc. I'll use this system responsibly
-                      for our joint business objectives.
-                    </p>
                   </div>
                 </div>
               </div>
@@ -91,24 +83,18 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                 <Button
                   onClick={handleAccept}
                   disabled={!isChecked || isSubmitting}
-                  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   size="lg"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Processing...
+                      処理中...
                     </span>
                   ) : (
-                    "Continue to Application"
+                    "システムに入る"
                   )}
                 </Button>
-              </div>
-
-              <div className="text-center pt-6 border-t border-slate-200">
-                <p className="text-sm text-slate-600">
-                  Thank you for being part of our partnership. Let's work together toward sustainable materials excellence.
-                </p>
               </div>
             </div>
           </CardContent>
