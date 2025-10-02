@@ -40,7 +40,7 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                     <Shield className="w-6 h-6 text-amber-700" />
                   </div>
                   <p className="text-base text-slate-700 leading-relaxed">
-                    本システムは<strong className="text-slate-900">東レ工業株式会社</strong>様向けに<br />
+                    本システムは<strong className="text-slate-900">東レ株式会社</strong>様向けに<br />
                     <strong className="text-slate-900">株式会社進和</strong>が開発中のプロトタイプです。
                   </p>
                   <div className="text-left space-y-3 mt-6 max-w-md mx-auto">
