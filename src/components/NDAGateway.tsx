@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,13 +8,6 @@ import { Shield, Lock, FileText, Users } from "lucide-react";
 const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const consent = sessionStorage.getItem('nda-consent');
-    if (consent === 'accepted') {
-      onAccept();
-    }
-  }, [onAccept]);
 
   const handleAccept = () => {
     if (!isChecked) return;
@@ -62,7 +55,7 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                 </h3>
                 <p className="text-slate-600 max-w-md mx-auto">
                   This collaborative system is designed for partnership between
-                  <strong> ShinMaywa USA, Inc.</strong> and <strong> Toray Industries, Inc.</strong>
+                  <strong> Shinwa Co., Ltd.</strong> and <strong> Toray Industries, Inc.</strong>
                 </p>
                 <p className="text-sm text-slate-500">
                   Together we're working on sustainable materials production and ISCC+ certification management
@@ -87,7 +80,7 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                     </label>
                     <p className="text-sm text-slate-600 leading-relaxed">
                       I confirm that I'm an authorized user working on collaborative projects between
-                      ShinMaywa USA, Inc. and Toray Industries, Inc. I'll use this system responsibly
+                      Shinwa Co., Ltd. and Toray Industries, Inc. I'll use this system responsibly
                       for our joint business objectives.
                     </p>
                   </div>

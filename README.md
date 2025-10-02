@@ -114,7 +114,7 @@ src/
 
 ## 🔐 Partnership Access Control
 
-The application implements a secure access gateway designed specifically for the partnership between ShinMaywa USA, Inc. and Toray Industries, Inc.
+The application implements a secure access gateway designed specifically for the partnership between Shinwa Co., Ltd. and Toray Industries, Inc.
 
 ### Access Gateway Features
 
