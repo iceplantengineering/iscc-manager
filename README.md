@@ -27,6 +27,7 @@ A comprehensive production management system for sustainable materials with ISCC
 - **Responsive Navigation**: Three-tier responsive design with grouped dropdown menus for optimal UX across all devices
 - **Enhanced Dropdown System**: Improved click-based dropdown menus with visual feedback and better accessibility
 - **Optimized Layout**: Clean horizontal navigation without scrollbars or overlapping elements
+- **Partnership Access Gateway**: Secure access control with partnership confirmation between ShinMaywa USA, Inc. and Toray Industries, Inc.
 
 ## 🛠 Tech Stack
 
@@ -91,6 +92,7 @@ src/
 │   ├── CostAnalysis.tsx        # Cost tracking & optimization
 │   ├── PredictiveAnalytics.tsx # AI-powered predictions
 │   ├── AdvancedReporting.tsx   # Report generation & exports
+│   ├── NDAGateway.tsx         # Partnership access confirmation gateway
 │   └── Navigation.tsx   # Enhanced navigation component with responsive dropdown menus
 ├── pages/               # Page Components
 │   ├── Index.tsx             # Dashboard overview
@@ -109,6 +111,26 @@ src/
 ├── lib/                 # Utility functions and data
 └── App.tsx             # Main application component
 ```
+
+## 🔐 Partnership Access Control
+
+The application implements a secure access gateway designed specifically for the partnership between ShinMaywa USA, Inc. and Toray Industries, Inc.
+
+### Access Gateway Features
+
+- **Partnership Confirmation**: User must confirm understanding of the collaborative system purpose
+- **Session-Based Access**: Consent is stored in session storage for the current browser session
+- **Professional UI**: Clean, partnership-focused interface rather than legalistic approach
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+
+### Access Flow
+
+1. **Initial Access**: Users are greeted with a partnership confirmation screen
+2. **Understanding Confirmation**: Users check a box confirming they understand the system's collaborative purpose
+3. **Application Access**: Once confirmed, users gain access to the full ISCC+ Production Manager system
+4. **Session Persistence**: Consent remains active for the duration of the browser session
+
+The gateway emphasizes collaboration and partnership rather than restrictive legal terms, creating a positive entry experience while maintaining appropriate access controls.
 
 ## 📋 Input Requirements & Operation Flow
 
