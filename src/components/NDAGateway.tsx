@@ -46,7 +46,7 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                   <div className="text-left space-y-3 mt-6 max-w-md mx-auto">
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 rounded-full mt-2"></div>
-                      <p className="text-sm text-slate-600">アクセスは許可された関係者に限定されています</p>
+                      <p className="text-sm text-slate-600">アクセスは許可された関係者に限定をお願いいたします</p>
                     </div>
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 rounded-full mt-2"></div>
