@@ -40,20 +40,30 @@ const App = () => {
   const [hasConsent, setHasConsent] = useState<boolean>(() => {
     // Initialize from sessionStorage on mount
     const consent = sessionStorage.getItem('nda-consent');
+    console.log('App init - sessionStorage nda-consent:', consent);
+    console.log('App init - hasConsent will be:', consent === 'accepted');
     return consent === 'accepted';
   });
 
+  console.log('App render - hasConsent:', hasConsent);
+
   if (!hasConsent) {
+    console.log('Showing NDAGateway');
     return (
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <NDAGateway onAccept={() => setHasConsent(true)} />
+          <NDAGateway onAccept={() => {
+            console.log('Gateway accepted, setting hasConsent to true');
+            setHasConsent(true);
+          }} />
         </TooltipProvider>
       </QueryClientProvider>
     );
   }
+
+  console.log('Showing main app');
 
   return (
     <QueryClientProvider client={queryClient}>
