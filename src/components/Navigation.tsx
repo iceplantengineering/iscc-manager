@@ -363,6 +363,7 @@ const Navigation = () => {
                   e.stopPropagation();
                   setIsTabletMoreOpen(!isTabletMoreOpen);
                 }}
+                aria-label="More navigation options"
               >
                 <MoreHorizontal className="h-4 w-4" />
                 <ChevronDown className="h-3 w-3 ml-1" />
@@ -466,6 +467,7 @@ const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
