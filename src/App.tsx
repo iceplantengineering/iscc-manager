@@ -37,23 +37,11 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [hasConsent, setHasConsent] = useState<boolean | null>(null);
-
-  useEffect(() => {
+  const [hasConsent, setHasConsent] = useState<boolean>(() => {
+    // Initialize from sessionStorage on mount
     const consent = sessionStorage.getItem('nda-consent');
-    setHasConsent(consent === 'accepted');
-  }, []);
-
-  if (hasConsent === null) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+    return consent === 'accepted';
+  });
 
   if (!hasConsent) {
     return (
