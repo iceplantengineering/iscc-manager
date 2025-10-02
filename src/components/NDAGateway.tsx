@@ -41,7 +41,7 @@ const NDAGateway: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
                   </div>
                   <p className="text-base text-slate-700 leading-relaxed">
                     本システムは<strong className="text-slate-900">東レ工業株式会社</strong>様向けに<br />
-                    <strong className="text-slate-900">株式会社SHINWA</strong>が開発中のプロトタイプです。
+                    <strong className="text-slate-900">株式会社進和</strong>が開発中のプロトタイプです。
                   </p>
                   <div className="text-left space-y-3 mt-6 max-w-md mx-auto">
                     <div className="flex items-start space-x-3">
