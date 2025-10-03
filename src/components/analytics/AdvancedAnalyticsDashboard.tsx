@@ -41,6 +41,8 @@ import {
   BarChart3,
   PieChart as PieChartIcon
 } from 'lucide-react';
+import RealTimeInsights from './RealTimeInsights';
+import ModelPerformanceTrend from './ModelPerformanceTrend';
 
 interface PredictionModel {
   id: string;
@@ -643,63 +645,17 @@ const AdvancedAnalyticsDashboard: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="insights" className="space-y-6">
-            {/* AI Insights */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Real-time AI Insights</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {predictiveInsights.map((insight) => (
-                    <div key={insight.id} className="border rounded-lg p-4">
-                      <div className="flex items-start gap-3 mb-3">
-                        {getInsightIcon(insight.type)}
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-medium">{insight.title}</h3>
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline">{insight.confidence}% confidence</Badge>
-                              <Badge variant="outline">{insight.impact} impact</Badge>
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">{insight.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
-                            <span>{insight.category}</span>
-                            <span>•</span>
-                            <span>{insight.timeframe}</span>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium mb-1">Recommended Actions:</h4>
-                            <ul className="text-sm text-gray-600 space-y-1">
-                              {insight.recommendations.map((rec, index) => (
-                                <li key={index} className="flex items-center gap-2">
-                                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                                  {rec}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* AI-powered Real-time Insights */}
+            <RealTimeInsights
+              productionData={productionForecastData}
+              qualityData={qualityPredictionData}
+              energyData={energyOptimizationData}
+              emissionsData={{ emissions: 145.2, target: 150, compliance: 96.8 }}
+              costData={costOptimizationData}
+            />
 
-            {/* Model Performance Trend */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Model Performance Trend</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  <Brain className="h-12 w-12 mx-auto mb-4" />
-                  <p>Model performance tracking and historical accuracy trends</p>
-                  <p className="text-sm">Detailed performance metrics and improvement suggestions</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* AI-powered Model Performance Trend */}
+            <ModelPerformanceTrend models={predictionModels} />
           </TabsContent>
         </Tabs>
       </div>
